@@ -1,0 +1,13 @@
+---
+description: Workflow para executar tarefas maiores seguindo o padrão do projeto.
+globs: "**/*"
+alwaysApply: false
+---
+
+# Workflow para tarefas maiores
+
+**Use a Skill `executar-tarefa-django-drf`** em `.cursor/skills/executar-tarefa-django-drf/SKILL.md`.
+
+Invoque quando criar apps/módulos, refatorar endpoints, alterar models/serializers ou concluir features multi-arquivo.
+
+Resumo: View/ViewSet leve → Serializer (contrato) → Service (negócio) → Model/Query (dados). Ao finalizar, listar arquivos alterados, regras aplicadas e comandos de teste.

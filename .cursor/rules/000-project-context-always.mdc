@@ -1,0 +1,40 @@
+---
+description: Contexto global do organeasy-core (Django + DRF, plataforma OrganEasy).
+globs: "**/*"
+alwaysApply: true
+---
+
+# Contexto geral do projeto
+
+O `organeasy-core` é o serviço de identidade da plataforma SaaS OrganEasy: autenticação (SimpleJWT), usuários, organizações (multi-tenancy), permissões, módulos habilitados, auditoria e Django Admin.
+
+Stack: Django + Django REST Framework, PostgreSQL, Redis (cache), Celery (tarefas assíncronas quando necessário).
+
+## Objetivo das rules
+
+- Manter separação clara de responsabilidades por camada.
+- Preservar isolamento de dados entre organizações (tenants).
+- Evitar views/viewsets gigantes com regra de negócio embutida.
+- Manter padrões de produção: performance, segurança e testes desde o início.
+
+## Fluxo recomendado
+
+Para novas funcionalidades de API:
+
+```text
+URL/Router -> View/ViewSet -> Serializer -> Service -> Model/Query -> Response
+```
+
+Para regras mais complexas:
+
+```text
+View -> Service -> Model/Query/Integração
+```
+
+## Regra de ouro
+
+Views não devem crescer indefinidamente. Sempre que uma view tiver muita regra de negócio, validação complexa, chamadas externas, geração de arquivos, filtros grandes ou várias consultas encadeadas, extrair para `services/` ou camada específica do app.
+
+## Referência de estrutura
+
+Estrutura de pastas (apps, `api/v1/`, `core/`, `config/settings/`), formato unificado de erro e padrões DRF detalhados: `docs/cursor/drf-reference.md`.

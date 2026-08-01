@@ -1,0 +1,52 @@
+---
+description: Regra obrigatória para autenticação, permissões e isolamento multi-tenant no organeasy-core.
+globs: "**/*.py"
+alwaysApply: true
+---
+
+# Regra obrigatória: usuário, organização e permissões
+
+O `organeasy-core` é multi-tenant: os dados pertencem a **organizações**. O Django possui `User` e `Group`, mas grupo/permissão global **não identifica sozinho** a organização do usuário.
+
+## Regra principal
+
+Toda regra que dependa do tenant deve resolver a organização real do usuário (via vínculo usuário-organização) antes de consultar ou alterar dados.
+
+Preferir:
+
+```text
+User -> vínculo com organização -> dados filtrados pela organização
+```
+
+## Ao criar/alterar endpoints
+
+Quando o recurso pertencer a uma organização:
+
+1. Verificar autenticação (JWT/SimpleJWT).
+2. Verificar permissões (`permission_classes`, RBAC do projeto).
+3. Resolver a organização do usuário autenticado.
+4. Filtrar querysets pela organização.
+5. Nunca aceitar `organization_id` vindo do payload como fonte de verdade sem validar o vínculo do usuário.
+
+## Ao criar queries
+
+Nunca retornar dados de todas as organizações para um usuário comum. Considerar usuários administrativos/superusuários explicitamente quando houver acesso ampliado.
+
+## Módulos habilitados
+
+Ações de módulos (Kanban, Financeiro, etc.) devem verificar se o módulo está habilitado para a organização.
+
+## Quando perguntar ao usuário
+
+Se a relação entre usuário, organização e permissão não estiver clara no código atual, perguntar antes de implementar. Perguntas úteis:
+
+- Este endpoint deve filtrar pela organização do usuário?
+- Usuários administrativos podem ver todas as organizações?
+- O usuário pode pertencer a mais de uma organização?
+- A ação depende de permissão global ou de papel dentro da organização?
+
+## Proibido
+
+- Criar lógica nova assumindo que `Group`/permissão global resolve o tenant.
+- Criar endpoint que exponha dados cross-tenant sem regra explícita.
+- Ignorar o vínculo usuário-organização em recursos multi-tenant.

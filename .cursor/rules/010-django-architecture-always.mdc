@@ -1,0 +1,57 @@
+---
+description: Regras de arquitetura para organizar o projeto Django + DRF.
+globs: "**/*.py"
+alwaysApply: true
+---
+
+# Arquitetura Django + DRF
+
+## Responsabilidades por camada
+
+### `models.py` / `models/`
+- Estrutura de dados e relacionamentos.
+- Métodos simples ligados ao próprio modelo.
+- Constraints, choices, índices e propriedades simples.
+
+Não colocar regras de fluxo de API, permissão complexa, chamadas HTTP externas ou geração de arquivos no model.
+
+### `views.py` / `viewsets.py`
+- Receber requisição e parâmetros.
+- Aplicar autenticação e permissão (`permission_classes`).
+- Instanciar serializers.
+- Chamar services quando houver regra complexa.
+- Retornar `Response` com status HTTP correto.
+
+Evitar views gigantes.
+
+### `serializers.py`
+- Validação de entrada e serialização de saída.
+- Validações ligadas ao payload (`validate_<field>` / `validate`).
+
+Não colocar regra de negócio extensa nem consultas pesadas no serializer quando isso puder ser service.
+
+### `services/`
+- Orquestração de regra de negócio.
+- Fluxos com múltiplas consultas.
+- Criação/atualização coordenada de objetos (com `transaction.atomic()`).
+- Regras de permissão específicas do domínio.
+- Integrações externas.
+
+### `utils/`
+- Funções técnicas reutilizáveis.
+- Exportação de arquivos, normalizadores, helpers sem dependência forte de domínio.
+
+### `admin.py`
+- Configuração do Django Admin.
+- Sem regra de negócio; ações complexas chamam services.
+
+### `signals.py`
+- Efeitos colaterais desacoplados (auditoria, notificações).
+- Não usar signals para fluxo principal de negócio (preferir service explícito).
+
+## Refatoração gradual
+
+Ao alterar arquivo existente:
+1. Não reescrever tudo sem necessidade.
+2. Isolar a mudança solicitada.
+3. Se identificar regra complexa, sugerir extração incremental para service.

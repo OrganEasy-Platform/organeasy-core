@@ -1,0 +1,46 @@
+---
+description: Avaliação obrigatória antes de criar novas classes reutilizáveis.
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# Classes reutilizáveis e abstrações
+
+Antes de criar uma nova classe, avaliar se ela pode ser reutilizada futuramente.
+
+## Criar abstração reutilizável quando a classe for técnica
+
+Exemplos:
+- envio de e-mail;
+- SMS/WhatsApp;
+- integração HTTP;
+- storage/upload;
+- PDF, Excel/CSV;
+- cache;
+- fila/background task (Celery);
+- autenticação externa;
+- normalizadores genéricos;
+- paginação, responses e exceptions padronizadas.
+
+Se for reutilizável entre apps, preferir criar em:
+
+```text
+core/
+```
+
+ou em estrutura equivalente já existente.
+
+## Manter no app/service quando for regra de negócio
+
+Exemplos:
+- regra específica de organizações/permissões;
+- fluxo de habilitação de módulos;
+- validação específica de um processo.
+
+## Antes de implementar
+
+Explicar brevemente:
+
+- Por que a classe fica em `core/` ou no app.
+- Se existe chance real de reutilização.
+- Qual interface mínima será criada.

@@ -1,0 +1,37 @@
+---
+description: Regras globais de segurança para Django, settings, secrets e permissões.
+globs: "**/*"
+alwaysApply: true
+---
+
+# Segurança e configurações
+
+## Nunca gerar ou versionar
+
+- senhas reais;
+- tokens reais;
+- `SECRET_KEY` real;
+- credenciais de banco;
+- certificados/chaves privadas;
+- dados pessoais sensíveis reais;
+- dumps de produção.
+
+## Settings
+
+- Usar variáveis de ambiente para segredos e configuração por ambiente (local, homologação, produção).
+- Ao criar nova variável de ambiente, atualizar `.env.example` com nome e valor de exemplo.
+- Evitar hardcode em settings.
+- Não alterar `DEBUG`, `ALLOWED_HOSTS`, banco ou middleware sem explicar impacto.
+
+## API e permissões
+
+- Todo endpoint deve declarar autenticação e permissão explicitamente.
+- Nunca expor dados de outra organização (ver `080-auth-multitenancy-always.mdc`).
+- Validar uploads (tipo, tamanho).
+- Evitar logs com dados sensíveis.
+- Tokens JWT: respeitar expiração e rotação de refresh token configuradas.
+
+## CSRF e CORS
+
+- Não remover proteção CSRF sem justificativa clara e segura.
+- CORS restrito às origens necessárias; nunca `CORS_ALLOW_ALL_ORIGINS = True` em produção.

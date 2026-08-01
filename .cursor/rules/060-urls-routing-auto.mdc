@@ -1,0 +1,33 @@
+---
+description: Regras para urls.py, routers DRF e organização de rotas.
+globs: "**/urls.py"
+alwaysApply: false
+---
+
+# URLs e rotas
+
+Ao criar ou alterar rotas:
+
+## Regras
+- Usar nomes de rotas (`name="..."` / `basename="..."`) claros e estáveis.
+- Evitar duplicidade de nomes.
+- Agrupar URLs por app e incluir via `include()`.
+- Versionar a API na URL (`/api/v1/...`).
+- Não colocar regra de negócio em `urls.py`.
+- Se criar nova view/viewset, registrar a rota no app correto.
+
+## Padrão recomendado
+
+```python
+router = DefaultRouter()
+router.register("organizations", OrganizationViewSet, basename="organization")
+
+urlpatterns = [
+    path("", include(router.urls)),
+]
+```
+
+## Cuidados
+
+- Evitar quebrar rotas já consumidas por clientes; preferir adicionar novas rotas em vez de renomear antigas, salvo solicitação explícita.
+- Mudança de contrato de rota existente deve ser sinalizada como breaking change.

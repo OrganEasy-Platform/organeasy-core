@@ -1,0 +1,17 @@
+---
+description: GitHub Actions CI para testes unitários — workflow, encoding UTF-8 e settings de CI.
+globs: ".github/**/*.yml,.github/**/*.yaml,requirements.txt,requirements-dev.txt,pytest.ini,setup.cfg,pyproject.toml"
+alwaysApply: false
+---
+
+# GitHub Actions — CI de testes
+
+**Use a Skill `configurar-ci-github-actions`** em `.cursor/skills/configurar-ci-github-actions/SKILL.md`.
+
+## Princípios
+
+- CI roda **apenas** testes unitários (`-m "not integration"` no pytest).
+- `requirements.txt` e `requirements-dev.txt` em **UTF-8** (nunca UTF-16 — quebra `pip install` no Linux).
+- Secrets fictícios no workflow (`SECRET_KEY`, banco); nunca secrets reais.
+- Settings de CI separado (ex.: `config.settings.ci`) ou variáveis de ambiente no workflow.
+- Pipeline de testes separado do pipeline de deploy.

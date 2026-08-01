@@ -1,0 +1,47 @@
+---
+description: Regras para documentação, README e release notes do projeto.
+globs: "README.md,docs/**/*.md,.cursor/**/*.md"
+alwaysApply: false
+---
+
+# Documentação
+
+O README principal deve conter apenas informações reais do projeto.
+
+## Atualizar README quando houver
+
+- novo app ou módulo de negócio;
+- novo endpoint relevante;
+- novo service relevante;
+- nova integração externa;
+- novo fluxo de autenticação/permissão;
+- nova variável de ambiente obrigatória;
+- novo comando de execução ou teste;
+- nova estrutura de pasta;
+- mudança importante na arquitetura;
+- nova regra de negócio confirmada.
+
+## Alterações recentes
+
+Manter seção no README:
+
+```md
+## Alterações recentes
+
+| Data | Tipo | Módulo/Pasta | Alteração | Impacto |
+| ---- | ---- | ------------ | --------- | ------- |
+| 2026-08-01 | Adicionado | `organizations/` | Criado app de organizações. | Endpoints passam a filtrar por organização. |
+```
+
+Tipos sugeridos: `Adicionado`, `Alterado`, `Removido`, `Corrigido`, `Documentado`, `Sugestão`.
+
+## Não documentar
+
+- funcionalidades imaginadas ou endpoints não implementados (salvo marcados como planejamento);
+- detalhes sensíveis;
+- regras de negócio inferidas sem confirmação;
+- alterações mínimas (typo, formatação, refatoração invisível).
+
+## Regra final
+
+Ao finalizar uma alteração grande, verificar se o README precisa ser atualizado. Se precisar, atualizar no mesmo fluxo.

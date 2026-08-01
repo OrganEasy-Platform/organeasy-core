@@ -1,0 +1,19 @@
+---
+description: Rule manual para descobrir regras de negócio no projeto e gerar novas rules específicas.
+globs: "**/*"
+alwaysApply: false
+---
+
+# Descoberta manual de regras de negócio
+
+**Use a Skill `descobrir-regras-negocio`** em `.cursor/skills/descobrir-regras-negocio/SKILL.md`.
+
+Invoque quando quiser mapear regras de negócio existentes no código (apps, models, serializers, views, services) e transformá-las em rules ativas.
+
+Resumo do fluxo:
+
+1. Analisar o projeto e separar regras confirmadas de regras inferidas.
+2. Registrar em `.cursor/business-rules/` (descobertas, perguntas, decisões).
+3. Após confirmação, criar rule em `.cursor/rules/2xx-business-<dominio>-auto.mdc`.
+
+Proibido criar rule de negócio baseada apenas em suposição ou alterar código durante a análise sem autorização.

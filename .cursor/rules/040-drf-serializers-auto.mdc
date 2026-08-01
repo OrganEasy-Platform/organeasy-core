@@ -1,0 +1,25 @@
+---
+description: Regras para serializers DRF.
+globs: "**/serializers.py,**/serializers/**/*.py"
+alwaysApply: false
+---
+
+# Serializers DRF
+
+Serializers cuidam da validação de entrada e da serialização de saída.
+
+## O serializer deve
+- Declarar campos explicitamente (evitar `fields = "__all__"` em models com dados sensíveis).
+- Validar dados com `validate_<field>` ou `validate`.
+- Não aceitar dados inválidos silenciosamente.
+- Manter campos sensíveis (senha, tokens) como `write_only` ou fora do serializer de resposta.
+- Separar serializer de entrada e de saída quando os contratos divergirem (ex.: `Create`/`Update` vs `Response`).
+
+## O serializer não deve
+- Executar regras extensas de negócio.
+- Fazer consultas pesadas dentro de `SerializerMethodField` (risco de N+1).
+- Fazer chamadas externas.
+
+## Quando extrair para service
+
+Se a validação depender de múltiplos models, regras de organização/permissão ou fluxo de status, mover a regra principal para service e manter no serializer apenas a validação de entrada.

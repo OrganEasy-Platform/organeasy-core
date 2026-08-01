@@ -1,0 +1,74 @@
+{
+  "$description": "Design tokens da plataforma OrganEasy. Fonte: docs/design/identidade-visual.md e docs/design/design-system.md.",
+  "brand": {
+    "colors": {
+      "primary": "#34C759",
+      "secondary": "#0891B2",
+      "accent": "#0F172A",
+      "grayDark": "#64748B",
+      "grayLight": "#F1F5F9",
+      "white": "#FFFFFF"
+    },
+    "semantic": {
+      "success": "#34C759",
+      "info": "#0891B2",
+      "warning": "#F59E0B",
+      "error": "#EF4444",
+      "neutral": "#64748B"
+    },
+    "gradient": {
+      "stops": ["#34C759", "#0891B2", "#0D9488"]
+    },
+    "typography": {
+      "fontFamily": "Poppins",
+      "scale": {
+        "title1": { "size": 32, "lineHeight": 40, "weight": 700 },
+        "title2": { "size": 24, "lineHeight": 32, "weight": 600 },
+        "title3": { "size": 20, "lineHeight": 28, "weight": 500 },
+        "text": { "size": 16, "lineHeight": 24, "weight": 400 },
+        "caption": { "size": 14, "lineHeight": 20, "weight": 400 },
+        "small": { "size": 12, "lineHeight": 16, "weight": 400 }
+      }
+    }
+  },
+  "ui": {
+    "colors": {
+      "primary": "#22C55E",
+      "secondary": "#06B6D4",
+      "accent": "#3B82F6",
+      "neutral900": "#0F172A",
+      "neutral700": "#334155",
+      "neutral500": "#64748B",
+      "neutral300": "#CBD5E1",
+      "neutral100": "#F1F5F9",
+      "background": "#F8FAFC"
+    },
+    "semantic": {
+      "success": "#22C55E",
+      "warning": "#F59E0B",
+      "error": "#EF4444",
+      "info": "#3B82F6"
+    },
+    "typography": {
+      "fontFamily": "Inter",
+      "scale": {
+        "h1": { "size": 32, "weight": 700, "letterSpacing": -0.5 },
+        "h2": { "size": 24, "weight": 600, "letterSpacing": -0.25 },
+        "h3": { "size": 18, "weight": 600 },
+        "body": { "size": 16, "weight": 400, "lineHeightPct": 160 },
+        "small": { "size": 14, "weight": 400, "lineHeightPct": 150 },
+        "caption": { "size": 12, "weight": 400, "lineHeightPct": 150 }
+      }
+    },
+    "iconography": {
+      "style": "outline",
+      "strokeWidth": 2,
+      "corners": "rounded"
+    },
+    "darkMode": {
+      "background": "#0F172A",
+      "textPrimary": "#F1F5F9",
+      "textSecondary": "#64748B"
+    }
+  }
+}

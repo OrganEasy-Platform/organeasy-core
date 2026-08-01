@@ -1,0 +1,35 @@
+---
+description: Regras para models, relacionamentos e migrations Django.
+globs: "**/models.py,**/models/**/*.py,**/migrations/**/*.py"
+alwaysApply: false
+---
+
+# Models Django
+
+Ao criar ou alterar models:
+
+## Models devem conter
+- Campos da tabela.
+- Relacionamentos (`ForeignKey`, `ManyToManyField`, `OneToOneField`) com `related_name` claro.
+- `verbose_name` e `verbose_name_plural` quando fizer sentido.
+- `__str__` claro e seguro.
+- Choices via `TextChoices`/`IntegerChoices` quando aplicável.
+- Constraints e índices (`Meta.constraints`, `Meta.indexes`) para campos filtrados/ordenados com frequência.
+- FK para a organização (tenant) quando o dado pertencer a uma organização.
+
+## Models não devem conter
+- Regras grandes de view/API.
+- Integrações externas.
+- Geração de arquivos complexos.
+- Lógica extensa de permissão.
+
+## Migrations
+
+- Não editar migrations antigas sem necessidade.
+- Para mudança nova, gerar nova migration (`makemigrations`).
+- Se a alteração envolver dados existentes, avaliar `RunPython` ou plano de migração.
+- Explicar riscos antes de propor migration destrutiva (drop de coluna/tabela, alteração de tipo).
+
+## Multi-tenancy e auditoria
+
+Se a alteração envolver usuário, organização, permissões ou módulos habilitados, consultar também a rule `080-auth-multitenancy-always.mdc`.

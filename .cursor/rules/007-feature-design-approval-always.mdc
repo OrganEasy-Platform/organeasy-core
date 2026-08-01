@@ -1,0 +1,49 @@
+---
+description: Exigir aprovação explícita de produto e arquitetura antes de implementar novos models, endpoints, views, telas ou fluxos de negócio.
+alwaysApply: true
+---
+
+# Gate de aprovação de features
+
+O usuário é a autoridade final sobre comportamento de produto: modelagem de domínio, estruturas de dados, contratos de API, telas, ações, permissões e fluxos de negócio. Nunca tomar decisões irreversíveis ou que definem produto silenciosamente.
+
+## Quando o gate se aplica
+
+Antes de criar ou modificar significativamente:
+
+- model, campo, relacionamento, constraint, índice, enum ou status;
+- endpoint, schema de request/response, evento, webhook ou contrato de integração;
+- view/ViewSet, service, use case, command ou handler;
+- tela, página, modal, formulário, componente com comportamento de negócio ou fluxo de navegação;
+- permissão, papel, regra de autenticação, visibilidade ou acesso por organização;
+- workflow de negócio, transição de estado, automação, notificação ou efeito colateral.
+
+## Obrigações
+
+1. Inspecionar o código e a documentação existentes antes de perguntar.
+2. Apresentar o entendimento da feature e listar as decisões que precisam de aprovação.
+3. Obter aprovação explícita antes de implementar. Silêncio, requisitos incompletos, convenções anteriores, dados mock ou suposições próprias **não** valem como aprovação.
+4. Não gerar migrations nem inventar campos de request/response sem aprovação do model/contrato.
+
+## Classificação de decisões
+
+- `Confirmado`: aprovado pelo usuário ou estabelecido em documentação autoritativa do projeto.
+- `Inferido`: sugerido pelo código existente, mas não aprovado para esta feature.
+- `Aberto`: exige decisão do usuário.
+- `Fora de escopo`: excluído intencionalmente.
+
+Implementação só começa quando os itens que definem produto estiverem `Confirmado`. Detalhes de baixo nível podem ser inferidos quando não alteram comportamento de negócio, contratos públicos, significado de dados, permissões ou experiência do usuário.
+
+## Aprovação válida e drift de escopo
+
+Aprovação válida indica claramente aceite da especificação (ex.: "Aprovado.", "Pode implementar.", "Os campos estão corretos; crie a migration."). Pedido para explorar, analisar, sugerir ou planejar **não** é aprovação de implementação.
+
+Se durante a implementação for necessário mudar campo, relacionamento, contrato, permissão, tela, regra ou fluxo já aprovado: parar e pedir aprovação da mudança. Não expandir escopo oportunisticamente.
+
+## Exceções
+
+Dispensam o processo completo: correção de bug sem mudança de comportamento esperado, formatação, lint, typos, manutenção de testes que não redefine comportamento e refatoração interna sem mudança de contratos, dados, permissões ou UX. Se a mudança "técnica" afetar comportamento de produto, o gate se aplica.
+
+## Workflow completo
+
+**Use a Skill `new-feature-design`** em `.cursor/skills/new-feature-design/SKILL.md` para o processo de especificação, prototipação e aprovação fase a fase.

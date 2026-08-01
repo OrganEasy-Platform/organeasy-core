@@ -1,0 +1,43 @@
+---
+description: Regras para services, utils e extração de lógica reutilizável.
+globs: "**/services/**/*.py,**/utils/**/*.py,**/*service*.py,**/*utils*.py"
+alwaysApply: false
+---
+
+# Services e Utils
+
+## Services
+
+Use services para regras de negócio, especialmente quando envolver:
+- múltiplos models;
+- filtros por usuário/organização;
+- criação de objetos relacionados (com `transaction.atomic()`);
+- transições de status;
+- integração externa;
+- geração de relatórios;
+- regras usadas por mais de uma view.
+
+## Utils
+
+Use utils para funções técnicas reutilizáveis:
+- exportação Excel/CSV;
+- formatação e normalização;
+- geração de arquivos;
+- helpers sem regra forte de negócio.
+
+## Evitar
+
+- Services genéricos demais sem necessidade.
+- Utils com regra de negócio escondida.
+- Funções muito grandes.
+- Duplicar lógica entre apps.
+- Queries dentro de loops.
+
+## Padrão sugerido
+
+```text
+app/services/<dominio>_service.py
+app/utils/<capacidade>.py
+```
+
+Se a capacidade for técnica e reutilizável entre apps, avaliar criação em `core/`, conforme a rule `115-reusable-core-abstractions-auto.mdc`.

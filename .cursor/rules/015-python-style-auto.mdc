@@ -1,0 +1,43 @@
+---
+description: Estilo geral para código Python no projeto.
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# Estilo Python
+
+## Regras gerais
+
+- Usar tipagem sempre que possível.
+- Preferir nomes claros e explícitos (lowercase com underscores).
+- Evitar funções muito longas.
+- Evitar imports não utilizados.
+- Evitar `pass` silencioso em blocos importantes.
+- Evitar `except Exception` genérico sem tratamento claro.
+- Não misturar responsabilidades na mesma função.
+
+## Imports
+
+Organizar imports em grupos:
+
+1. biblioteca padrão;
+2. bibliotecas externas (Django, DRF, etc.);
+3. imports internos do projeto.
+
+## Erros
+
+Mensagens de erro devem ser claras e úteis. Em código de API, preferir exceções do DRF:
+
+```python
+from rest_framework.exceptions import NotFound
+
+raise NotFound("Registro não encontrado.")
+```
+
+## Comentários
+
+Comentários devem explicar decisões e regras, não repetir o óbvio.
+
+## Logs
+
+Usar logs para eventos importantes, mas sem expor dados sensíveis (senhas, tokens, dados pessoais).

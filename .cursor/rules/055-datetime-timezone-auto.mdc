@@ -1,0 +1,40 @@
+---
+description: Datas e horários Django/DRF — UTC no banco, fuso local na resposta quando necessário.
+globs: "**/models.py,**/models/**/*.py,**/serializers.py,**/serializers/**/*.py,**/services/**/*.py,**/migrations/**/*.py"
+alwaysApply: false
+---
+
+# Datetime e timezone (Django + DRF)
+
+Padrão: **persistir em UTC**, exibir no fuso configurado quando necessário (default `America/Sao_Paulo`).
+
+## Settings obrigatórios
+
+```python
+USE_TZ = True
+TIME_ZONE = "America/Sao_Paulo"
+```
+
+Com `USE_TZ = True`, o Django persiste em UTC e converte automaticamente.
+
+## Contrato
+
+| Camada | Regra |
+|--------|-------|
+| Banco | Colunas timestamp com timezone (automático com `USE_TZ=True` + PostgreSQL) |
+| Models / services | `django.utils.timezone.now()` — nunca `datetime.now()` ou `datetime.utcnow()` |
+| Campos de auditoria | `auto_now_add=True` / `auto_now=True` ou `default=timezone.now` |
+| DRF | `DATETIME_FORMAT` ISO 8601; conversão de fuso na serialização se o contrato exigir |
+| Campos `date` | Sem conversão de fuso |
+
+## Proibido
+
+- `datetime.now()` ou `datetime.utcnow()` em código de produção.
+- Datetime naive em comparações ou defaults.
+- Converter `date` para fuso.
+- Serializar datas manualmente em views (usar serializer).
+
+## Testes mínimos
+
+- Valores gravados são timezone-aware (UTC).
+- Serialização retorna ISO 8601 com offset correto.

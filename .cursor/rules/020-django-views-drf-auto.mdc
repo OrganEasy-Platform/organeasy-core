@@ -1,0 +1,47 @@
+---
+description: Regras para views e viewsets Django/DRF.
+globs: "**/views.py,**/views/**/*.py,**/viewsets.py,**/viewsets/**/*.py"
+alwaysApply: false
+---
+
+# Views e ViewSets (DRF)
+
+Ao criar ou alterar views:
+
+## A view deve
+- Declarar `authentication_classes`/`permission_classes` adequadas (nunca endpoint sensível aberto por omissão).
+- Filtrar querysets pelo escopo do usuário/organização quando o recurso for multi-tenant.
+- Instanciar serializers para entrada e saída.
+- Chamar services para regras complexas.
+- Retornar status HTTP correto (200, 201, 204, 400, 401, 403, 404, 409...).
+- Tratar erros previsíveis com respostas padronizadas.
+
+## A view não deve
+- Concentrar regra de negócio extensa.
+- Fazer queries repetidas sem organização (atenção a N+1: usar `select_related`/`prefetch_related`).
+- Duplicar lógica já existente em outra view/service.
+- Fazer chamadas externas diretamente se isso puder ir para service/core.
+- Retornar dados de outra organização por falta de filtro.
+
+## Padrão recomendado
+
+```python
+class MinhaViewSet(viewsets.ModelViewSet):
+    serializer_class = MeuSerializer
+    permission_classes = [IsAuthenticated, IsOrganizationMember]
+
+    def get_queryset(self):
+        return MeuModel.objects.filter(
+            organization=self.request.user.organization
+        ).select_related("organization")
+```
+
+## Listas
+
+Endpoints de listagem devem ter paginação e, quando fizer sentido, filtros (`django-filter`) e ordenação. Para dados acessados com frequência e pouco mutáveis, avaliar cache (Redis via cache framework do Django).
+
+## Para views existentes grandes
+
+1. Preservar comportamento atual.
+2. Corrigir o necessário.
+3. Extrair somente a nova lógica ou a parte alterada para service.
