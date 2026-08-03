@@ -15,14 +15,15 @@ alwaysApply: true
 
 Não colocar regras de fluxo de API, permissão complexa, chamadas HTTP externas ou geração de arquivos no model.
 
-### `views.py` / `viewsets.py`
+### `views.py`
+- Function-based views com `@api_view` (não `APIView` / `ViewSet` / `generics`).
 - Receber requisição e parâmetros.
-- Aplicar autenticação e permissão (`permission_classes`).
+- Aplicar autenticação e permissão (`@permission_classes`).
 - Instanciar serializers.
 - Chamar services quando houver regra complexa.
 - Retornar `Response` com status HTTP correto.
 
-Evitar views gigantes.
+Evitar views gigantes. Detalhes: rule `020-django-views-drf-auto.mdc`.
 
 ### `serializers.py`
 - Validação de entrada e serialização de saída.

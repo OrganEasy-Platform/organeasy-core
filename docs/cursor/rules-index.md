@@ -11,11 +11,11 @@ Documentação humana das rules ativas em `.cursor/rules/` e skills em `.cursor/
 | `007-feature-design-approval-always.mdc` | always | Gate: aprovação explícita antes de implementar models, endpoints, telas e fluxos → skill `new-feature-design`. |
 | `010-django-architecture-always.mdc` | always | Responsabilidades por camada (models, views, serializers, services). |
 | `015-python-style-auto.mdc` | auto | Estilo Python geral. |
-| `020-django-views-drf-auto.mdc` | auto | Views/ViewSets DRF. |
+| `020-django-views-drf-auto.mdc` | auto | Views DRF como FBV (`@api_view`); proíbe ViewSet/APIView novos. |
 | `030-django-models-auto.mdc` | auto | Models e migrations. |
 | `040-drf-serializers-auto.mdc` | auto | Serializers DRF. |
 | `055-datetime-timezone-auto.mdc` | auto | UTC no banco, `timezone.now()`, `USE_TZ=True`. |
-| `060-urls-routing-auto.mdc` | auto | URLs, routers e versionamento de API. |
+| `060-urls-routing-auto.mdc` | auto | URLs com `path()` + FBV; versionamento `/api/v1/`. |
 | `070-services-utils-auto.mdc` | auto | Services e utils. |
 | `075-github-actions-ci-auto.mdc` | auto (stub) | CI GitHub Actions → skill `configurar-ci-github-actions`. |
 | `080-auth-multitenancy-always.mdc` | always | Autenticação, permissões e isolamento por organização. |
@@ -25,6 +25,9 @@ Documentação humana das rules ativas em `.cursor/rules/` e skills em `.cursor/
 | `115-reusable-core-abstractions-auto.mdc` | auto | Avaliar `core/` antes de criar classes reutilizáveis. |
 | `120-business-rules-discovery-manual.mdc` | manual (stub) | Descoberta de regras de negócio → skill `descobrir-regras-negocio`. |
 | `130-task-workflow-agent.mdc` | manual (stub) | Tarefas multi-camada → skill `executar-tarefa-django-drf`. |
+| `140-git-commits-always.mdc` | always | Conventional Commits para mensagens de commit. |
+| `150-pr-review-manual.mdc` | manual (stub) | Review de PR/diff → skill `revisar-pr`. |
+| `160-docker-auto.mdc` | auto | Dockerfile e docker-compose (Python/Django). |
 
 ## Regras de negócio específicas
 
@@ -53,9 +56,12 @@ A pasta `.cursor/business-rules/` registra descobertas, perguntas e decisões an
 | `descobrir-regras-negocio` | Mapear negócio → rules 2xx. |
 | `configurar-ci-github-actions` | Pipeline CI de testes unitários. |
 | `auditar-rules-skills-docs` | Auditoria de rules, skills e docs. |
+| `revisar-pr` | Review de PR/diff (segurança, performance, testes, arquitetura). |
 
 ## Origem
 
 Migrado e adaptado de `Arancia_CursorRules_Django` (rules Django) e `TemplateFastAPI_cursor_rules` (skills e rules agnósticas), com adaptações para Django + DRF e para o domínio multi-tenant do OrganEasy.
+
+Itens adicionais adaptados de `awesome-cursorrules` (2026-08-01): Conventional Commits (`140`), skill `revisar-pr` + stub (`150`), Docker (`160`).
 
 As rules herdadas do setup inicial (`000-django-global.mdc` e `000-django-rest-global.mdc`) foram consolidadas em 2026-08-01: a primeira era duplicação das rules migradas e foi removida; a segunda virou `docs/cursor/drf-reference.md`.

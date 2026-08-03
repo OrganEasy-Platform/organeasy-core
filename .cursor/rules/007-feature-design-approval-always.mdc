@@ -13,7 +13,7 @@ Antes de criar ou modificar significativamente:
 
 - model, campo, relacionamento, constraint, índice, enum ou status;
 - endpoint, schema de request/response, evento, webhook ou contrato de integração;
-- view/ViewSet, service, use case, command ou handler;
+- view (FBV), service, use case, command ou handler;
 - tela, página, modal, formulário, componente com comportamento de negócio ou fluxo de navegação;
 - permissão, papel, regra de autenticação, visibilidade ou acesso por organização;
 - workflow de negócio, transição de estado, automação, notificação ou efeito colateral.

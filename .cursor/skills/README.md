@@ -9,5 +9,6 @@ Workflows longos extraídos de rules manuais ou documentação. Invocar pelo nom
 | [descobrir-regras-negocio](./descobrir-regras-negocio/SKILL.md) | Mapear negócio → rules 2xx |
 | [configurar-ci-github-actions](./configurar-ci-github-actions/SKILL.md) | Pipeline CI de testes unitários |
 | [auditar-rules-skills-docs](./auditar-rules-skills-docs/SKILL.md) | Auditoria de rules, skills e docs |
+| [revisar-pr](./revisar-pr/SKILL.md) | Review de PR/diff (segurança, performance, testes, arquitetura) |
 
 Rules de princípio (contexto global): `.cursor/rules/`. Índice: [docs/cursor/rules-index.md](../../docs/cursor/rules-index.md).

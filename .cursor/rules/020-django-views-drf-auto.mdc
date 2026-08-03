@@ -1,24 +1,30 @@
 ---
-description: Regras para views e viewsets Django/DRF.
+description: Function-based views (FBV) obrigatórias para endpoints Django/DRF.
 globs: "**/views.py,**/views/**/*.py,**/viewsets.py,**/viewsets/**/*.py"
 alwaysApply: false
 ---
 
-# Views e ViewSets (DRF)
+# Views DRF — function-based views (FBV)
 
-Ao criar ou alterar views:
+Novos endpoints e alterações em views da API **devem** usar function-based views com `@api_view`. Não criar `APIView`, `ViewSet`, `ModelViewSet`, `generics.*` nem classes de view para a API.
+
+Django Admin permanece class-based (fora do escopo desta rule).
 
 ## A view deve
-- Declarar `authentication_classes`/`permission_classes` adequadas (nunca endpoint sensível aberto por omissão).
+
+- Ser uma função decorada com `@api_view([...])`.
+- Declarar `@permission_classes` / `@authentication_classes` (nunca endpoint sensível aberto por omissão).
 - Filtrar querysets pelo escopo do usuário/organização quando o recurso for multi-tenant.
 - Instanciar serializers para entrada e saída.
 - Chamar services para regras complexas.
-- Retornar status HTTP correto (200, 201, 204, 400, 401, 403, 404, 409...).
+- Retornar `Response` com status HTTP correto (200, 201, 204, 400, 401, 403, 404, 409...).
 - Tratar erros previsíveis com respostas padronizadas.
 
 ## A view não deve
+
+- Ser class-based (`APIView`, `ViewSet`, `generics`, mixins).
 - Concentrar regra de negócio extensa.
-- Fazer queries repetidas sem organização (atenção a N+1: usar `select_related`/`prefetch_related`).
+- Fazer queries repetidas sem organização (N+1: `select_related`/`prefetch_related`).
 - Duplicar lógica já existente em outra view/service.
 - Fazer chamadas externas diretamente se isso puder ir para service/core.
 - Retornar dados de outra organização por falta de filtro.
@@ -26,22 +32,39 @@ Ao criar ou alterar views:
 ## Padrão recomendado
 
 ```python
-class MinhaViewSet(viewsets.ModelViewSet):
-    serializer_class = MeuSerializer
-    permission_classes = [IsAuthenticated, IsOrganizationMember]
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
 
-    def get_queryset(self):
-        return MeuModel.objects.filter(
-            organization=self.request.user.organization
-        ).select_related("organization")
+@api_view(["GET", "POST"])
+@permission_classes([IsAuthenticated, IsOrganizationMember])
+def organization_list_create(request):
+    if request.method == "GET":
+        qs = Organization.objects.filter(
+            memberships__user=request.user
+        ).select_related(...)
+        serializer = OrganizationSerializer(qs, many=True)
+        return Response(serializer.data)
+
+    serializer = OrganizationCreateSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    org = OrganizationService.create(user=request.user, **serializer.validated_data)
+    return Response(
+        OrganizationSerializer(org).data,
+        status=status.HTTP_201_CREATED,
+    )
 ```
+
+Registrar com `path()` em `urls.py` (não `DefaultRouter` / `router.register`).
 
 ## Listas
 
-Endpoints de listagem devem ter paginação e, quando fizer sentido, filtros (`django-filter`) e ordenação. Para dados acessados com frequência e pouco mutáveis, avaliar cache (Redis via cache framework do Django).
+Endpoints de listagem devem ter paginação e, quando fizer sentido, filtros e ordenação. Para dados acessados com frequência e pouco mutáveis, avaliar cache (Redis).
 
-## Para views existentes grandes
+## Views existentes (CBV / ViewSet)
 
-1. Preservar comportamento atual.
-2. Corrigir o necessário.
-3. Extrair somente a nova lógica ou a parte alterada para service.
+1. Preservar comportamento ao alterar.
+2. Não expandir ViewSets/CBVs existentes com novas actions.
+3. Endpoints novos na mesma área: criar como FBV.
+4. Migração CBV → FBV só com solicitação explícita ou no escopo da tarefa.

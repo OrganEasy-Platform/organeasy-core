@@ -1,0 +1,49 @@
+---
+description: Boas práticas de Dockerfile e docker-compose para o organeasy-core (Python/Django).
+globs: "Dockerfile*,docker-compose*.yml,docker-compose*.yaml,.dockerignore"
+alwaysApply: false
+---
+
+# Docker
+
+Imagens mínimas, seguras e reproduzíveis para o serviço Django + DRF.
+
+## Dockerfile
+
+- Pin de versão: `FROM python:3.12-slim-bookworm` (nunca `:latest` em produção).
+- Multi-stage quando houver build de dependências nativas ou artefatos intermediários.
+- Cache de layers: copiar `requirements*.txt` → `pip install` → copiar o código.
+- Combinar `RUN` com `&&` para reduzir layers.
+- Criar usuário non-root e usar `USER` antes do `CMD`.
+- `HEALTHCHECK` nos serviços de longa duração (API, workers quando aplicável).
+- Preferir `COPY` a `ADD`.
+
+## Segurança
+
+- Nunca rodar como root em produção.
+- Sem secrets no Dockerfile, build args ou layers da imagem.
+- Não copiar `.env` nem arquivos de credenciais para a imagem.
+- Escanear imagem no CI quando o pipeline existir (ex.: Trivy / Docker Scout).
+
+## `.dockerignore`
+
+Sempre incluir pelo menos: `.git`, `.env*`, `__pycache__`, `*.pyc`, `.venv`, `venv`, `*.log`, `.pytest_cache`, `.cursor`, `docs/` (se não necessário na imagem), arquivos de teste quando a imagem for só runtime.
+
+## Compose
+
+- Named volumes para persistência (Postgres, Redis data).
+- Bind mounts só em desenvolvimento; nunca em produção.
+- Rede bridge customizada; referenciar serviços pelo nome.
+- Variáveis sensíveis via env file / secrets do orquestrador — nunca hardcoded no compose versionado com valores reais.
+
+## Logging
+
+- Sempre stdout/stderr; nunca escrever logs em arquivos dentro do container como único destino.
+
+## Proibido
+
+- Tag `:latest` em produção.
+- `ADD` quando `COPY` resolve.
+- Usuário root em produção.
+- Secrets em build args ou layers.
+- Copiar `.env` com valores reais para a imagem.

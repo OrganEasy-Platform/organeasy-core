@@ -14,7 +14,7 @@ Stack: Django + Django REST Framework, PostgreSQL, Redis (cache), Celery (tarefa
 
 - Manter separação clara de responsabilidades por camada.
 - Preservar isolamento de dados entre organizações (tenants).
-- Evitar views/viewsets gigantes com regra de negócio embutida.
+- Preferir function-based views (`@api_view`); evitar views gigantes com regra de negócio embutida.
 - Manter padrões de produção: performance, segurança e testes desde o início.
 
 ## Fluxo recomendado
@@ -22,13 +22,13 @@ Stack: Django + Django REST Framework, PostgreSQL, Redis (cache), Celery (tarefa
 Para novas funcionalidades de API:
 
 ```text
-URL/Router -> View/ViewSet -> Serializer -> Service -> Model/Query -> Response
+URL (path) -> View (FBV @api_view) -> Serializer -> Service -> Model/Query -> Response
 ```
 
 Para regras mais complexas:
 
 ```text
-View -> Service -> Model/Query/Integração
+View (FBV) -> Service -> Model/Query/Integração
 ```
 
 ## Regra de ouro

@@ -1,0 +1,56 @@
+---
+description: Conventional Commits para mensagens de commit do organeasy-core.
+alwaysApply: true
+---
+
+# Conventional Commits
+
+Ao criar commits neste repositório, usar a especificação Conventional Commits.
+
+## Formato
+
+```text
+tipo(escopo): descrição
+
+[corpo opcional]
+
+[footer opcional]
+```
+
+## Tipos
+
+| Tipo | Uso |
+| ---- | --- |
+| `feat` | Nova funcionalidade |
+| `fix` | Correção de bug |
+| `docs` | Documentação |
+| `refactor` | Refatoração sem mudança de comportamento |
+| `test` | Testes |
+| `chore` | Manutenção (deps, configs auxiliares) |
+| `ci` | Pipeline CI/CD |
+| `perf` | Melhoria de performance |
+
+## Escopo
+
+Preferir o app ou módulo afetado: `organizations`, `users`, `auth`, `core`, `cursor`, `ci`.
+
+Exemplos: `feat(organizations): adicionar vínculo usuário-organização`, `fix(auth): validar refresh token expirado`.
+
+## Regras da descrição
+
+- Imperativo, em português ou inglês consistente com o histórico recente do repo.
+- Sem ponto final.
+- Máximo ~72 caracteres na primeira linha.
+
+## Breaking changes
+
+Indicar com `!` após o tipo/escopo (`feat(api)!: ...`) e/ou footer:
+
+```text
+BREAKING CHANGE: description of the incompatible change
+```
+
+## Proibido
+
+- Mensagens genéricas (`update`, `fix stuff`, `wip`).
+- Misturar vários tipos não relacionados no mesmo commit quando puder separar.

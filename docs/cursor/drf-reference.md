@@ -60,7 +60,8 @@ config/
 ## Padrões
 
 ### Views e API
-- Class-based views com DRF (`APIView`, `ViewSet`).
+- Function-based views com DRF (`@api_view`); não usar `APIView` / `ViewSet` / `generics` em endpoints novos.
+- Rotas com `path()` (sem `DefaultRouter` para recursos novos).
 - REST estrito: métodos HTTP e status codes corretos.
 - Views leves; negócio em services/models/managers.
 - Response unificada para sucesso e erro.

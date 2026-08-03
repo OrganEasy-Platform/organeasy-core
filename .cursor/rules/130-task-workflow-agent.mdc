@@ -10,4 +10,4 @@ alwaysApply: false
 
 Invoque quando criar apps/módulos, refatorar endpoints, alterar models/serializers ou concluir features multi-arquivo.
 
-Resumo: View/ViewSet leve → Serializer (contrato) → Service (negócio) → Model/Query (dados). Ao finalizar, listar arquivos alterados, regras aplicadas e comandos de teste.
+Resumo: View FBV (`@api_view`) leve → Serializer (contrato) → Service (negócio) → Model/Query (dados). Ao finalizar, listar arquivos alterados, regras aplicadas e comandos de teste.

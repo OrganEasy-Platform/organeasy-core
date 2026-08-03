@@ -1,5 +1,5 @@
 ---
-description: Regras para urls.py, routers DRF e organização de rotas.
+description: Regras para urls.py e rotas DRF com function-based views.
 globs: "**/urls.py"
 alwaysApply: false
 ---
@@ -9,25 +9,43 @@ alwaysApply: false
 Ao criar ou alterar rotas:
 
 ## Regras
-- Usar nomes de rotas (`name="..."` / `basename="..."`) claros e estáveis.
+
+- Usar `path()` apontando para function-based views (`@api_view`).
+- Nomes de rotas (`name="..."`) claros e estáveis.
 - Evitar duplicidade de nomes.
 - Agrupar URLs por app e incluir via `include()`.
 - Versionar a API na URL (`/api/v1/...`).
 - Não colocar regra de negócio em `urls.py`.
-- Se criar nova view/viewset, registrar a rota no app correto.
+- Se criar nova view, registrar a rota no app correto.
+
+## Proibido (API nova)
+
+- `DefaultRouter` / `SimpleRouter` + `router.register` para endpoints novos (padrão de ViewSet).
+- Bindar class-based views (`as_view()`) em rotas novas da API.
 
 ## Padrão recomendado
 
 ```python
-router = DefaultRouter()
-router.register("organizations", OrganizationViewSet, basename="organization")
+from django.urls import path
+
+from . import views
 
 urlpatterns = [
-    path("", include(router.urls)),
+    path(
+        "organizations/",
+        views.organization_list_create,
+        name="organization-list",
+    ),
+    path(
+        "organizations/<uuid:pk>/",
+        views.organization_detail,
+        name="organization-detail",
+    ),
 ]
 ```
 
 ## Cuidados
 
-- Evitar quebrar rotas já consumidas por clientes; preferir adicionar novas rotas em vez de renomear antigas, salvo solicitação explícita.
+- Evitar quebrar rotas já consumidas; preferir adicionar novas em vez de renomear, salvo solicitação explícita.
 - Mudança de contrato de rota existente deve ser sinalizada como breaking change.
+- Rotas legadas com router/ViewSet: manter estáveis; não expandir o router com novos recursos.

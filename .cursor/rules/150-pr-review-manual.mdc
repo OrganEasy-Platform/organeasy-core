@@ -1,0 +1,13 @@
+---
+description: Rule manual para review de PR/diff sob ângulos de segurança, performance, testes e arquitetura.
+globs: "**/*"
+alwaysApply: false
+---
+
+# Review de PR / diff
+
+**Use a Skill `revisar-pr`** em `.cursor/skills/revisar-pr/SKILL.md`.
+
+Invoque quando pedir review de pull request, diff local ou "revisar este PR".
+
+Resumo: quatro ângulos (segurança, performance, testes, arquitetura); severidade `blocker` / `important` / `nit`; citação de arquivo e linha; veredito final. O ângulo de segurança inclui checagens de isolamento multi-tenant do OrganEasy.

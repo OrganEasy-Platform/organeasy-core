@@ -4,7 +4,7 @@ Serviço de identidade da plataforma OrganEasy: Django + Django REST Framework, 
 
 Regras principais:
 
-- Views/ViewSets devem ser enxutos; regras complexas vão para services.
+- Views da API são function-based (`@api_view`), enxutas; regras complexas vão para services.
 - Serializers validam entrada e definem contrato de saída; campos sensíveis fora da resposta.
 - Models representam dados e relacionamentos, com constraints e índices.
 - Todo endpoint declara autenticação e permissão explicitamente.

@@ -13,8 +13,8 @@ Antes de alterar código, identifique camadas impactadas: `urls`, `views`, `seri
 2. Model (se tabela nova) + migration
 3. Serializers (entrada e saída; separar Create/Update de Response quando divergirem)
 4. Service com regra de negócio
-5. View/ViewSet chamando o service, com `permission_classes` e filtro por organização
-6. Registrar rota no router/`urls.py` (versionada em `/api/v1/`)
+5. Function-based view (`@api_view`) chamando o service, com `@permission_classes` e filtro por organização
+6. Registrar rota com `path()` em `urls.py` (versionada em `/api/v1/`; sem router/ViewSet novo)
 7. Admin (se aplicável)
 8. Testes básicos (status, permissões, isolamento multi-tenant)
 9. README + **Alterações recentes** se relevante
