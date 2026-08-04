@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+venv/
+.venv/
+env/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Git / IDE / Cursor
+.git/
+.cursor/
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Django / testes
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+static_root/
+*.log
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# Docs e testes não vão na imagem de runtime
+docs/
+tests/
+**/tests.py
+.github/
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+README.md

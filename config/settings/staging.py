@@ -14,3 +14,6 @@ ALLOWED_HOSTS = [
 
 if not SECRET_KEY:  # noqa: F405
     raise ValueError("DJANGO_SECRET_KEY é obrigatória em staging.")
+
+if DATABASES["default"]["ENGINE"].endswith("sqlite3"):  # noqa: F405
+    raise ValueError("SQLite não é permitido em staging; use PostgreSQL.")

@@ -1,7 +1,10 @@
-﻿# Django / DRF — organeasy-core
+# Django / DRF - organeasy-core
 Django==6.0.7
 djangorestframework==3.17.1
 python-dotenv==1.2.2
 asgiref==3.12.1
 sqlparse==0.5.5
 tzdata==2026.3
+psycopg[binary]==3.2.9
+django-cors-headers==4.7.0
+redis==5.2.1

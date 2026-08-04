@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-bookworm
+        env:
+          POSTGRES_DB: organeasy_test
+          POSTGRES_USER: organeasy
+          POSTGRES_PASSWORD: organeasy-ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U organeasy -d organeasy_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DJANGO_SETTINGS_MODULE: config.settings.test
+      DJANGO_SECRET_KEY: ci-secret-not-for-production
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,testserver
+      DJANGO_DB_ENGINE: postgresql
+      POSTGRES_DB: organeasy_test
+      POSTGRES_USER: organeasy
+      POSTGRES_PASSWORD: organeasy-ci
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: "5432"
+      REDIS_URL: ""
+      CORS_ALLOWED_ORIGINS: ""
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-dev.txt
+
+      - name: Verify requirements files are UTF-8
+        run: |
+          python -c "
+          import pathlib
+          for name in ('requirements.txt', 'requirements-dev.txt'):
+              p = pathlib.Path(name)
+              if not p.exists():
+                  continue
+              raw = p.read_bytes()
+              if raw.startswith(b'\xff\xfe') or raw.startswith(b'\xfe\xff'):
+                  raise SystemExit(f'{name} must be UTF-8, not UTF-16')
+              raw.decode('utf-8')
+          print('requirements encoding OK')
+          "
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Check missing migrations
+        run: python manage.py makemigrations --check --dry-run
+
+      - name: Run unit tests
+        run: pytest -m "not integration" -v --tb=short

@@ -17,3 +17,6 @@ if not SECRET_KEY:  # noqa: F405
 
 if not ALLOWED_HOSTS:
     raise ValueError("DJANGO_ALLOWED_HOSTS é obrigatória em produção.")
+
+if DATABASES["default"]["ENGINE"].endswith("sqlite3"):  # noqa: F405
+    raise ValueError("SQLite não é permitido em produção; use PostgreSQL.")
