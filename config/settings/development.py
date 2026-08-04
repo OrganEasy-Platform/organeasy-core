@@ -6,7 +6,13 @@ from .base import *  # noqa: F403
 
 DEBUG = True
 
-SECRET_KEY = SECRET_KEY or "django-insecure-dev-only-change-me"  # noqa: F405
+SECRET_KEY = SECRET_KEY or "django-insecure-dev-only-change-me-32chars"  # noqa: F405
+
+# Alinhar signing key se SECRET_KEY foi ajustada após o import de base.
+SIMPLE_JWT = {  # noqa: F405
+    **SIMPLE_JWT,  # noqa: F405
+    "SIGNING_KEY": os.getenv("JWT_SIGNING_KEY", "").strip() or SECRET_KEY,
+}
 
 if not ALLOWED_HOSTS:  # noqa: F405
     ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "testserver", "web"]

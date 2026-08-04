@@ -1,6 +1,7 @@
 """Settings base compartilhadas entre ambientes."""
 
 import os
+from datetime import timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -28,6 +29,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "rest_framework",
+    "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
     "drf_spectacular",
     "core.apps.CoreConfig",
     "users",
@@ -122,6 +125,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
         "core.authentication.SessionAuthentication401",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
@@ -136,6 +140,31 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "API de identidade do OrganEasy (usuários, organizações, autenticação).",
     "VERSION": "0.1.0",
     "SERVE_INCLUDE_SCHEMA": False,
+}
+
+# SimpleJWT — claims e lifetimes via env (ADR 0003 / Fase 3).
+_JWT_ACCESS_SECONDS = int(os.getenv("JWT_ACCESS_LIFETIME_SECONDS", "900"))
+_JWT_REFRESH_SECONDS = int(os.getenv("JWT_REFRESH_LIFETIME_SECONDS", "604800"))
+_JWT_SIGNING_KEY = os.getenv("JWT_SIGNING_KEY", "").strip() or SECRET_KEY
+_JWT_ISSUER = os.getenv("JWT_ISSUER", "organeasy-auth").strip() or "organeasy-auth"
+_JWT_AUDIENCE = os.getenv("JWT_AUDIENCE", "organeasy-services").strip() or "organeasy-services"
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=_JWT_ACCESS_SECONDS),
+    "REFRESH_TOKEN_LIFETIME": timedelta(seconds=_JWT_REFRESH_SECONDS),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "UPDATE_LAST_LOGIN": True,
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": _JWT_SIGNING_KEY,
+    "ISSUER": _JWT_ISSUER,
+    "AUDIENCE": _JWT_AUDIENCE,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "sub",
+    "TOKEN_TYPE_CLAIM": "token_type",
+    "JTI_CLAIM": "jti",
+    "AUTH_TOKEN_CLASSES": ("core.tokens.OrganEasyAccessToken",),
 }
 
 # Schema/Swagger: desligado por padrão; development/test ligam. Produção exige env explícito.

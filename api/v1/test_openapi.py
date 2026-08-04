@@ -12,6 +12,9 @@ class OpenApiDocsTests(SimpleTestCase):
         self.assertEqual(body["openapi"].split(".")[0], "3")
         paths = body["paths"]
         self.assertIn("/api/v1/health/", paths)
+        self.assertIn("/api/v1/auth/login/", paths)
+        self.assertIn("/api/v1/auth/refresh/", paths)
+        self.assertIn("/api/v1/auth/logout/", paths)
         self.assertIn("/api/v1/me/", paths)
         self.assertIn("/api/v1/me/organizations/", paths)
 

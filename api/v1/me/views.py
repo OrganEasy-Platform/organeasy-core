@@ -1,4 +1,4 @@
-"""Views do perfil autenticado (Fase 2 — SessionAuthentication)."""
+"""Views do perfil autenticado (JWT Bearer ou Session)."""
 
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import api_view, permission_classes

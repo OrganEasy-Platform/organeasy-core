@@ -23,7 +23,7 @@ Detalhes: [docs/initial_plan/escopo-e-nao-escopo.md](docs/initial_plan/escopo-e-
 ## Stack (deste repositório)
 
 - Django + Django REST Framework
-- SimpleJWT (previsto nas Fases 3+)
+- SimpleJWT (login/refresh/logout; claims mínimas)
 - PostgreSQL via Docker Compose (SQLite opcional para smoke local)
 - Redis (cache; LocMem se `REDIS_URL` vazio)
 - Celery quando houver tarefa assíncrona justificada
@@ -57,7 +57,8 @@ Já existe:
 - Projeto Django com settings por ambiente (`config/settings/`)
 - Health check `GET /api/v1/health/`
 - Apps `users` / `organizations` / `core` (User, Organization, Membership, AuditLog)
-- API `GET /api/v1/me/` e `GET /api/v1/me/organizations/` (SessionAuthentication)
+- SimpleJWT: `POST /api/v1/auth/login|refresh|logout/` + Bearer em `/me`
+- API `GET /api/v1/me/` e `GET /api/v1/me/organizations/` (JWT ou Session)
 - OpenAPI/Swagger (`drf-spectacular`): `GET /api/docs/` e `GET /api/schema/`
 - Django Admin para user/org/vínculo com auditoria administrativa
 - Docker Compose (Django + PostgreSQL + Redis), Dockerfile e CI GitHub Actions
@@ -65,7 +66,7 @@ Já existe:
 - CORS (`django-cors-headers`) e cache Redis/LocMem
 - Rules/skills Cursor e `.env.example`
 
-Ainda não (Fases 3–6): SimpleJWT, claims JWT, org ativa no token, RBAC, catálogo de módulos.
+Ainda não (Fases 4–6): org ativa no token, RBAC, catálogo de módulos.
 
 ## Estrutura
 
@@ -73,12 +74,12 @@ Ainda não (Fases 3–6): SimpleJWT, claims JWT, org ativa no token, RBAC, catá
 config/          # Projeto Django (settings por ambiente, urls, wsgi/asgi)
 users/           # User customizado (email) + seed_demo
 organizations/   # Organization + OrganizationMembership
-core/            # AuditLog, responses, exception handler, auth session 401
-api/v1/          # Endpoints versionados (FBV + path): health, me
+core/            # AuditLog, responses, exception handler, tokens JWT
+api/v1/          # Endpoints versionados (FBV + path): health, auth, me
 docker/          # entrypoint do container web
 docs/adr/        # Architecture Decision Records
 docs/api/        # OpenAPI/Swagger e contratos de API
-docs/identity/   # Modelo de identidade (Fase 2)
+docs/identity/   # Modelo de identidade + contrato JWT
 docs/initial_plan/
 .github/workflows/
 manage.py
@@ -110,9 +111,17 @@ Após migrate, opcional:
 python manage.py seed_demo
 ```
 
-Perfil (requer sessão autenticada): `GET /api/v1/me/` · organizações: `GET /api/v1/me/organizations/`
+Perfil (JWT Bearer ou sessão): `GET /api/v1/me/` · organizações: `GET /api/v1/me/organizations/`
 
-Modelo de identidade: [docs/identity/modelo-identidade.md](docs/identity/modelo-identidade.md).
+Login JWT:
+
+```bash
+curl -s -X POST http://127.0.0.1:8000/api/v1/auth/login/ ^
+  -H "Content-Type: application/json" ^
+  -d "{\"email\":\"membro@organeasy.local\",\"password\":\"...\"}"
+```
+
+Modelo de identidade: [docs/identity/modelo-identidade.md](docs/identity/modelo-identidade.md) · contrato JWT: [docs/identity/jwt-contract.md](docs/identity/jwt-contract.md).
 
 ## Docker Compose (recomendado)
 
@@ -134,6 +143,10 @@ Variáveis relevantes (ver `.env.example`):
 | `REDIS_URL` | `redis://redis:6379/0` | Cache Redis (vazio = LocMem) |
 | `CORS_ALLOWED_ORIGINS` | `http://localhost:3000` | Origens CORS |
 | `DJANGO_ENABLE_API_DOCS` | `true` / `false` | Liga `/api/docs/` e `/api/schema/` (default off em produção) |
+| `JWT_ACCESS_LIFETIME_SECONDS` | `900` | Lifetime do access token |
+| `JWT_REFRESH_LIFETIME_SECONDS` | `604800` | Lifetime do refresh token |
+| `JWT_SIGNING_KEY` | (vazio = `DJANGO_SECRET_KEY`) | Chave HS256 |
+| `JWT_ISSUER` / `JWT_AUDIENCE` | `organeasy-auth` / `organeasy-services` | Claims `iss` / `aud` |
 
 ## CI
 
@@ -156,6 +169,7 @@ pytest -m "not integration" -v
 
 | Data | Tipo | Módulo/Pasta | Alteração | Impacto |
 | ---- | ---- | ------------ | --------- | ------- |
+| 2026-08-03 | Adicionado | `api/v1/auth/`, `core/tokens.py`, SimpleJWT | Fase 3: login/refresh/logout JWT, claims ADR 0003 (`org_id` null), blacklist, contrato em `docs/identity/jwt-contract.md`. | IdP emite Bearer; `/me` aceita JWT; refresh rotacionado e revogável. |
 | 2026-08-03 | Adicionado | `drf-spectacular`, `docs/api/openapi.md`, `config/urls.py` | OpenAPI/Swagger: `/api/schema/`, `/api/docs/`; endpoints `health`/`me` com `@extend_schema`; flag `DJANGO_ENABLE_API_DOCS`; rule `065`. | Documentação interativa da API; contratos no schema. |
 | 2026-08-03 | Adicionado | `users/`, `organizations/`, `core/`, `api/v1/me/` | Fase 2: User (email), Organization, Membership, AuditLog, Admin com auditoria, `GET /me/` e `GET /me/organizations/`, `seed_demo`. | Fonte de verdade de identidade; JWT/RBAC nas fases seguintes. |
 | 2026-08-03 | Removido | `setup/`, `api/v1/setup/` | App `setup` removido (não previsto no plano); health check movido para `api/v1/health/` sem app Django dedicado. | Menos app vazio; `GET /api/v1/health/` mantido. |

@@ -57,7 +57,10 @@ Rule do agente: `.cursor/rules/065-openapi-swagger-auto.mdc`.
 
 ## Autenticação no schema
 
-A autenticação atual (`SessionAuthentication401`) aparece como `cookieAuth` (cookie `sessionid`), via extensão em `core/openapi.py`.
+- JWT Bearer (`JWTAuthentication`) — esquema padrão do spectacular.
+- Sessão (`SessionAuthentication401`) aparece como `cookieAuth` (cookie `sessionid`), via extensão em `core/openapi.py`.
+
+Tag OpenAPI `auth`: login, refresh, logout. Contrato detalhado: [docs/identity/jwt-contract.md](../identity/jwt-contract.md).
 
 ## Arquivos principais
 

@@ -1,6 +1,6 @@
-# Modelo de identidade — organeasy-core (Fase 2)
+# Modelo de identidade — organeasy-core (Fases 2–3)
 
-Fonte de verdade de usuários e organizações no IdP Django.
+Fonte de verdade de usuários e organizações no IdP Django; emissão JWT via SimpleJWT.
 
 ## Entidades
 
@@ -10,6 +10,7 @@ Fonte de verdade de usuários e organizações no IdP Django.
 | `Organization` | `organizations` | Tenant lógico |
 | `OrganizationMembership` | `organizations` | Vínculo User↔Organization (`status`, `is_default`) |
 | `AuditLog` | `core` | Auditoria administrativa (create/update/status_change) |
+| Outstanding/Blacklisted token | SimpleJWT | Refresh outstanding + blacklist |
 
 ## Regras
 
@@ -17,16 +18,22 @@ Fonte de verdade de usuários e organizações no IdP Django.
 - Usuário `blocked` → `is_active=False` (não autentica).
 - Listagem de orgs do usuário: só membership `active` + org `active`.
 - Nunca aceitar `organization_id` do client como fonte de verdade do vínculo.
-- Papéis/scopes: Fase 5. Org ativa no JWT: Fase 4. JWT: Fase 3.
+- API autenticada: JWT Bearer (preferencial) e Session (Admin/dev).
+- Papéis/scopes reais: Fase 5. Org ativa no JWT: Fase 4.
 
-## API (Fase 2)
+## API
 
 | Método | Rota | Auth |
 | ------ | ---- | ---- |
-| `GET` | `/api/v1/me/` | Session (`IsAuthenticated`) |
-| `GET` | `/api/v1/me/organizations/` | Session (`IsAuthenticated`) |
+| `POST` | `/api/v1/auth/login/` | público |
+| `POST` | `/api/v1/auth/refresh/` | público |
+| `POST` | `/api/v1/auth/logout/` | JWT |
+| `GET` | `/api/v1/me/` | JWT ou Session |
+| `GET` | `/api/v1/me/organizations/` | JWT ou Session |
 
 CRUD de user/org/vínculo: Django Admin.
+
+Contrato JWT (claims, lifetimes, validação): [jwt-contract.md](jwt-contract.md).
 
 ## Seed local
 

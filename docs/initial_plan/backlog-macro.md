@@ -64,12 +64,14 @@ Fases 0–1 são fundação (docs + infra) e não entregam domínio de produto.
 | Campo | Valor |
 | ----- | ----- |
 | Fase | 3 |
-| Status | Pendente — especificação antes dos endpoints |
+| Status | Concluída (spec aprovada + implementação) |
 | Objetivo | Emitir tokens no Django (IdP) |
 | Entregáveis | FBV: login, refresh, logout, me; rotação + blacklist; claims do [ADR 0003](../adr/0003-jwt-minimal-claims.md); formato de erro unificado; testes de expirado/inválido/revogado |
 | Dependências | E2 |
 | Riscos | Claims instáveis para consumidores futuros; log de token completo; HS256 em prod sem plano RS256 |
 | Critério de pronto | login → access → me; logout invalida refresh; contrato JWT documentado |
+
+Contrato: [docs/identity/jwt-contract.md](../identity/jwt-contract.md).
 
 ---
 
@@ -128,7 +130,7 @@ Fases 0–1 são fundação (docs + infra) e não entregam domínio de produto.
 | E0 | [#18](https://github.com/OrganEasy-Platform/organeasy-core/issues/18) `docs(core): Fase 0 — ADRs e escopo` | `epic`, `phase-0` | Fechada |
 | E1 | [#19](https://github.com/OrganEasy-Platform/organeasy-core/issues/19) `chore(ci): Fase 1 — Docker Compose, Postgres e GitHub Actions` | `epic`, `phase-1` | Fechada |
 | E2 | [#20](https://github.com/OrganEasy-Platform/organeasy-core/issues/20) `feat(users): Fase 2 — User, Organization e vínculo` | `epic`, `phase-2` | Fechada |
-| E3 | [#21](https://github.com/OrganEasy-Platform/organeasy-core/issues/21) `feat(auth): Fase 3 — SimpleJWT login/refresh/logout/me` | `epic`, `phase-3`, `needs-spec` | Aberta |
+| E3 | [#21](https://github.com/OrganEasy-Platform/organeasy-core/issues/21) `feat(auth): Fase 3 — SimpleJWT login/refresh/logout/me` | `epic`, `phase-3` | Fechada (local; fechar Issue no GitHub se ainda aberta) |
 | E4 | [#22](https://github.com/OrganEasy-Platform/organeasy-core/issues/22) `feat(organizations): Fase 4 — contexto de tenant e org_id no JWT` | `epic`, `phase-4`, `needs-spec` | Aberta |
 | E5 | [#23](https://github.com/OrganEasy-Platform/organeasy-core/issues/23) `feat(auth): Fase 5 — RBAC e scopes por organização` | `epic`, `phase-5`, `needs-spec` | Aberta |
 | E6 | [#24](https://github.com/OrganEasy-Platform/organeasy-core/issues/24) `feat(organizations): Fase 6 — catálogo de módulos habilitáveis` | `epic`, `phase-6`, `needs-spec` | Aberta |

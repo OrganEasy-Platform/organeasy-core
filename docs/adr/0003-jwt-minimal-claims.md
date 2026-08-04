@@ -30,7 +30,7 @@ Políticas complementares:
 - Não colocar volume grande de permissões no token; preferir scopes relevantes ao contexto.
 - Nunca versionar segredos de assinatura no repositório.
 
-Valores literais de `iss`/`aud` e o conjunto inicial de scopes serão fixados na especificação da Fase 3 (antes da implementação).
+Valores literais de `iss`/`aud` fixados na Fase 3: `organeasy-auth` / `organeasy-services` (override via `JWT_ISSUER` / `JWT_AUDIENCE`). Scopes iniciais: lista vazia até a Fase 5 (RBAC). Ver [jwt-contract.md](../identity/jwt-contract.md).
 
 ## Alternativas consideradas
 

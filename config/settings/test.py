@@ -4,7 +4,13 @@ from .base import *  # noqa: F403
 
 DEBUG = False
 
-SECRET_KEY = "ci-test-secret-not-for-production"
+SECRET_KEY = "ci-test-secret-not-for-production-32b"
+
+# base.py congela SIGNING_KEY no import; alinhar à SECRET_KEY de teste.
+SIMPLE_JWT = {  # noqa: F405
+    **SIMPLE_JWT,  # noqa: F405
+    "SIGNING_KEY": SECRET_KEY,
+}
 
 ALLOWED_HOSTS = ["testserver", "localhost", "127.0.0.1"]
 
