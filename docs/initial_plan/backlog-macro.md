@@ -126,11 +126,11 @@ Fases 0–1 são fundação (docs + infra) e não entregam domínio de produto.
 | Épico | Issue | Labels | Estado |
 | ----- | ----- | ------ | ------ |
 | E0 | [#18](https://github.com/OrganEasy-Platform/organeasy-core/issues/18) `docs(core): Fase 0 — ADRs e escopo` | `epic`, `phase-0` | Fechada |
-| E1 | [#19](https://github.com/OrganEasy-Platform/organeasy-core/issues/19) `chore(ci): Fase 1 — Docker Compose, Postgres e GitHub Actions` | `epic`, `phase-1` | Implementado (pending merge) |
-| E2 | [#20](https://github.com/OrganEasy-Platform/organeasy-core/issues/20) `feat(users): Fase 2 — User, Organization e vínculo` | `epic`, `phase-2`, `needs-spec` | Aberta |
+| E1 | [#19](https://github.com/OrganEasy-Platform/organeasy-core/issues/19) `chore(ci): Fase 1 — Docker Compose, Postgres e GitHub Actions` | `epic`, `phase-1` | Fechada |
+| E2 | [#20](https://github.com/OrganEasy-Platform/organeasy-core/issues/20) `feat(users): Fase 2 — User, Organization e vínculo` | `epic`, `phase-2` | Fechada |
 | E3 | [#21](https://github.com/OrganEasy-Platform/organeasy-core/issues/21) `feat(auth): Fase 3 — SimpleJWT login/refresh/logout/me` | `epic`, `phase-3`, `needs-spec` | Aberta |
 | E4 | [#22](https://github.com/OrganEasy-Platform/organeasy-core/issues/22) `feat(organizations): Fase 4 — contexto de tenant e org_id no JWT` | `epic`, `phase-4`, `needs-spec` | Aberta |
 | E5 | [#23](https://github.com/OrganEasy-Platform/organeasy-core/issues/23) `feat(auth): Fase 5 — RBAC e scopes por organização` | `epic`, `phase-5`, `needs-spec` | Aberta |
 | E6 | [#24](https://github.com/OrganEasy-Platform/organeasy-core/issues/24) `feat(organizations): Fase 6 — catálogo de módulos habilitáveis` | `epic`, `phase-6`, `needs-spec` | Aberta |
 
-Labels: `phase-0` … `phase-6`, `epic`, `needs-spec` (Fases 2–6).
+Labels: `phase-0` … `phase-6`, `epic`, `needs-spec` (Fases 3–6).
