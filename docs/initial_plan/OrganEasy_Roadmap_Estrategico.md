@@ -1,5 +1,11 @@
 # OrganEasy - Roadmap Estratégico
 
+> **Aviso (2026-08-03):** documento histórico de visão de alto nível. A stack do **núcleo** abaixo (FastAPI/SQLAlchemy como IdP) está **desatualizada**.
+>
+> - Documento mestre: [OrganEasy_Plano_de_Implementacao_Revisado.md](OrganEasy_Plano_de_Implementacao_Revisado.md)
+> - Reconciliação: [roadmap-reconciliation.md](roadmap-reconciliation.md)
+> - Neste repositório: Django + DRF + SimpleJWT = identidade; FastAPI = módulos de negócio (fora do core por enquanto)
+
 Documento guia para desenvolvimento do OrganEasy como plataforma SaaS modular voltada a demonstrar competências em arquitetura de software, backend, infraestrutura e liderança técnica.
 
 ## Visão
@@ -12,7 +18,9 @@ Demonstrar arquitetura, FastAPI, Docker, observabilidade, testes, CI/CD e módul
 
 ## Stack
 
-FastAPI, SQLAlchemy, Alembic, PostgreSQL/SQL Server, Redis, RabbitMQ, Docker Swarm, HAProxy, Grafana, Prometheus, Loki, Tempo, GitHub Actions.
+~~FastAPI, SQLAlchemy, Alembic~~ como núcleo — **substituído** no plano revisado por **Django + DRF + SimpleJWT** (IdP). FastAPI permanece para módulos de negócio.
+
+Demais peças de plataforma (ainda válidas como direção): PostgreSQL/SQL Server, Redis, RabbitMQ, Docker Swarm, HAProxy, Grafana, Prometheus, Loki, Tempo, GitHub Actions.
 
 ## 1. Fundação
 
