@@ -65,6 +65,7 @@ config/
 - REST estrito: métodos HTTP e status codes corretos.
 - Views leves; negócio em services/models/managers.
 - Response unificada para sucesso e erro.
+- OpenAPI com **drf-spectacular**: anotar FBVs com `@extend_schema`; UI em `/api/docs/`, schema em `/api/schema/` (fora de `/api/v1/`). Ver rule `065-openapi-swagger-auto.mdc`.
 
 ### Models e banco
 - ORM first; raw SQL só com justificativa de performance.

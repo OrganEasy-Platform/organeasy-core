@@ -1,5 +1,7 @@
 """Settings de desenvolvimento local."""
 
+import os
+
 from .base import *  # noqa: F403
 
 DEBUG = True
@@ -14,3 +16,7 @@ if not CORS_ALLOWED_ORIGINS:  # noqa: F405
         "http://localhost:3000",
         "http://127.0.0.1:3000",
     ]
+
+# Docs abertas em local, salvo override explícito no .env.
+if os.getenv("DJANGO_ENABLE_API_DOCS") is None:
+    ENABLE_API_DOCS = True

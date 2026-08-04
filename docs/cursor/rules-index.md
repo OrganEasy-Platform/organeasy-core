@@ -16,6 +16,7 @@ Documentação humana das rules ativas em `.cursor/rules/` e skills em `.cursor/
 | `040-drf-serializers-auto.mdc` | auto | Serializers DRF. |
 | `055-datetime-timezone-auto.mdc` | auto | UTC no banco, `timezone.now()`, `USE_TZ=True`. |
 | `060-urls-routing-auto.mdc` | auto | URLs com `path()` + FBV; versionamento `/api/v1/`. |
+| `065-openapi-swagger-auto.mdc` | auto | OpenAPI/Swagger (`drf-spectacular`); docs em `/api/docs/`, schema em `/api/schema/`. |
 | `070-services-utils-auto.mdc` | auto | Services e utils. |
 | `075-github-actions-ci-auto.mdc` | auto (stub) | CI GitHub Actions → skill `configurar-ci-github-actions`. |
 | `080-auth-multitenancy-always.mdc` | always | Autenticação, permissões e isolamento por organização. |

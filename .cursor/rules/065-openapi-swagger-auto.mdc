@@ -1,0 +1,60 @@
+---
+description: Toda nova rota de API deve alimentar OpenAPI/Swagger (drf-spectacular) de forma iterativa.
+globs: "api/**/*.py,**/urls.py,config/settings/**/*.py"
+alwaysApply: false
+---
+
+# OpenAPI / Swagger — documentação iterativa
+
+Biblioteca padrão: **drf-spectacular** (OpenAPI 3). Não usar `drf-yasg` em código novo.
+
+## Rotas oficiais (fora de `/api/v1/`)
+
+Documentação de infraestrutura, não versionada com a API de negócio:
+
+| Rota | View | Função |
+| ---- | ---- | ------ |
+| `/api/schema/` | `SpectacularAPIView` | Schema OpenAPI (JSON/YAML) |
+| `/api/docs/` | `SpectacularSwaggerView` | UI Swagger interativa |
+
+Registrar em `config/urls.py` (ou `api/urls.py` se existir agregador). **Exceção** à rule `060`: essas views CBV com `as_view()` são permitidas só para schema/docs.
+
+## Ao criar ou alterar endpoint
+
+1. Garantir que a rota entra no schema (FBV + `path()` já descobertos pelo spectacular).
+2. Anotar a view com `@extend_schema` (summary, description, tags, request/response, status codes).
+3. Usar serializers reais como `request=` / `responses=` — não inventar schemas paralelos.
+4. Incluir erros relevantes (`400`, `401`, `403`, `404`, `409`) quando fizerem parte do contrato.
+5. Marcar campos sensíveis corretamente no serializer (não documentar/expor senha, token, secret).
+6. Atualizar tag/descrição se o comportamento ou o contrato mudar.
+
+## Padrão mínimo (FBV)
+
+```python
+from drf_spectacular.utils import extend_schema
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
+@extend_schema(
+    tags=["me"],
+    summary="Perfil do usuário autenticado",
+    responses={200: MeSerializer},
+)
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def me_detail(request):
+    ...
+```
+
+## Settings
+
+- `REST_FRAMEWORK["DEFAULT_SCHEMA_CLASS"] = "drf_spectacular.openapi.AutoSchema"`
+- `SPECTACULAR_SETTINGS` com `TITLE`, `VERSION` e `DESCRIPTION` do serviço
+- Não expor schema/docs em produção sem decisão explícita de segurança (auth, rede ou desligar UI)
+
+## Proibido
+
+- Entregar endpoint novo sem `@extend_schema` (ou equivalente explícito no schema).
+- Documentar rotas/campos que não existem no código.
+- Duplicar contrato só no README sem refletir no OpenAPI.
+- Colocar `/api/docs/` ou `/api/schema/` dentro de `/api/v1/` (docs são transversais à versão).

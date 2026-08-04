@@ -44,6 +44,7 @@ Detalhes: [docs/initial_plan/escopo-e-nao-escopo.md](docs/initial_plan/escopo-e-
 
 | Doc | Uso |
 | --- | --- |
+| [OpenAPI / Swagger](docs/api/openapi.md) | Schema, `/api/docs/`, como documentar endpoints |
 | [Plano de implementação revisado](docs/initial_plan/OrganEasy_Plano_de_Implementacao_Revisado.md) | Documento mestre (fases e arquitetura) |
 | [Reconciliação do roadmap antigo](docs/initial_plan/roadmap-reconciliation.md) | FastAPI antigo vs Django IdP |
 | [Backlog macro](docs/initial_plan/backlog-macro.md) | Épicos 0–6 (User/Org → JWT → tenant → RBAC → módulos) |
@@ -57,6 +58,7 @@ Já existe:
 - Health check `GET /api/v1/health/`
 - Apps `users` / `organizations` / `core` (User, Organization, Membership, AuditLog)
 - API `GET /api/v1/me/` e `GET /api/v1/me/organizations/` (SessionAuthentication)
+- OpenAPI/Swagger (`drf-spectacular`): `GET /api/docs/` e `GET /api/schema/`
 - Django Admin para user/org/vínculo com auditoria administrativa
 - Docker Compose (Django + PostgreSQL + Redis), Dockerfile e CI GitHub Actions
 - PostgreSQL/Redis via env; SQLite só com `DJANGO_DB_ENGINE=sqlite`
@@ -75,6 +77,7 @@ core/            # AuditLog, responses, exception handler, auth session 401
 api/v1/          # Endpoints versionados (FBV + path): health, me
 docker/          # entrypoint do container web
 docs/adr/        # Architecture Decision Records
+docs/api/        # OpenAPI/Swagger e contratos de API
 docs/identity/   # Modelo de identidade (Fase 2)
 docs/initial_plan/
 .github/workflows/
@@ -96,6 +99,10 @@ python manage.py runserver
 ```
 
 Health check: `GET http://127.0.0.1:8000/api/v1/health/`
+
+Swagger UI: `http://127.0.0.1:8000/api/docs/` · schema OpenAPI: `http://127.0.0.1:8000/api/schema/`
+
+Guia: [docs/api/openapi.md](docs/api/openapi.md).
 
 Após migrate, opcional:
 
@@ -126,6 +133,7 @@ Variáveis relevantes (ver `.env.example`):
 | `POSTGRES_*` | `organeasy` / host `db` no Compose | Credenciais Postgres |
 | `REDIS_URL` | `redis://redis:6379/0` | Cache Redis (vazio = LocMem) |
 | `CORS_ALLOWED_ORIGINS` | `http://localhost:3000` | Origens CORS |
+| `DJANGO_ENABLE_API_DOCS` | `true` / `false` | Liga `/api/docs/` e `/api/schema/` (default off em produção) |
 
 ## CI
 
@@ -148,6 +156,7 @@ pytest -m "not integration" -v
 
 | Data | Tipo | Módulo/Pasta | Alteração | Impacto |
 | ---- | ---- | ------------ | --------- | ------- |
+| 2026-08-03 | Adicionado | `drf-spectacular`, `docs/api/openapi.md`, `config/urls.py` | OpenAPI/Swagger: `/api/schema/`, `/api/docs/`; endpoints `health`/`me` com `@extend_schema`; flag `DJANGO_ENABLE_API_DOCS`; rule `065`. | Documentação interativa da API; contratos no schema. |
 | 2026-08-03 | Adicionado | `users/`, `organizations/`, `core/`, `api/v1/me/` | Fase 2: User (email), Organization, Membership, AuditLog, Admin com auditoria, `GET /me/` e `GET /me/organizations/`, `seed_demo`. | Fonte de verdade de identidade; JWT/RBAC nas fases seguintes. |
 | 2026-08-03 | Removido | `setup/`, `api/v1/setup/` | App `setup` removido (não previsto no plano); health check movido para `api/v1/health/` sem app Django dedicado. | Menos app vazio; `GET /api/v1/health/` mantido. |
 | 2026-08-03 | Adicionado | `Dockerfile`, `docker-compose.yml`, `.github/workflows/ci.yml`, `config/settings/` | Fase 1: Compose (Django+Postgres+Redis), deps (`psycopg`, cors, redis), settings de banco/cache/CORS via env, CI (ruff+pytest) e `config.settings.test`. | Ambiente reproduzível; PR falha se lint/testes quebrarem. |

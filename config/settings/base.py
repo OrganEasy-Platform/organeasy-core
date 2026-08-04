@@ -28,7 +28,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "rest_framework",
-    "core",
+    "drf_spectacular",
+    "core.apps.CoreConfig",
     "users",
     "organizations",
 ]
@@ -127,7 +128,23 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ],
     "EXCEPTION_HANDLER": "core.exceptions.unified_exception_handler",
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "OrganEasy Core API",
+    "DESCRIPTION": "API de identidade do OrganEasy (usuários, organizações, autenticação).",
+    "VERSION": "0.1.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
+
+# Schema/Swagger: desligado por padrão; development/test ligam. Produção exige env explícito.
+ENABLE_API_DOCS = os.getenv("DJANGO_ENABLE_API_DOCS", "false").strip().lower() in (
+    "1",
+    "true",
+    "yes",
+    "on",
+)
 
 # CORS: origens explícitas via env (nunca CORS_ALLOW_ALL_ORIGINS em produção).
 CORS_ALLOWED_ORIGINS = [

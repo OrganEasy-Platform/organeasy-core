@@ -8,3 +8,4 @@ tzdata==2026.3
 psycopg[binary]==3.2.9
 django-cors-headers==4.7.0
 redis==5.2.1
+drf-spectacular==0.30.0

@@ -21,7 +21,7 @@ Ao criar ou alterar rotas:
 ## Proibido (API nova)
 
 - `DefaultRouter` / `SimpleRouter` + `router.register` para endpoints novos (padrão de ViewSet).
-- Bindar class-based views (`as_view()`) em rotas novas da API.
+- Bindar class-based views (`as_view()`) em rotas novas da API (exceto schema/docs do `drf-spectacular`: ver rule `065-openapi-swagger-auto.mdc`).
 
 ## Padrão recomendado
 

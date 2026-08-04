@@ -20,3 +20,5 @@ CACHES = {
 
 # CI define POSTGRES_*; localmente, smoke de testes pode usar sqlite.
 # Ver pytest.ini e .github/workflows/ci.yml.
+
+ENABLE_API_DOCS = True
