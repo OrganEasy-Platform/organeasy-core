@@ -49,12 +49,13 @@ Fases 0–1 são fundação (docs + infra) e não entregam domínio de produto.
 | Campo | Valor |
 | ----- | ----- |
 | Fase | 2 |
-| Status | Pendente — **exige `new-feature-design` + aprovação** antes de models/migrations |
+| Status | Concluída (spec aprovada + implementação) |
 | Objetivo | Fonte de verdade de usuários e organizações |
-| Entregáveis | Apps `users` / `organizations`; Admin; API mínima perfil + orgs do usuário; auditoria administrativa (modelo a definir na spec) |
+| Entregáveis | Apps `users` / `organizations`; Admin; API mínima perfil + orgs do usuário; auditoria administrativa (`core.AuditLog`) |
 | Dependências | E1 |
 | Riscos | Modelagem prematura; vazamento cross-org na listagem; User custom vs extensão mal definida |
 | Critério de pronto | Admin cria org/user/vínculo; usuário só vê suas orgs; testes de model/regra |
+| Doc | [modelo-identidade.md](../identity/modelo-identidade.md) |
 
 ---
 

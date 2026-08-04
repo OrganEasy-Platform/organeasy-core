@@ -1,4 +1,4 @@
-"""Views da API do app setup (fundação / health)."""
+"""Views de health check da API v1."""
 
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes

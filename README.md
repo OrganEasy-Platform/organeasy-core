@@ -54,23 +54,28 @@ Detalhes: [docs/initial_plan/escopo-e-nao-escopo.md](docs/initial_plan/escopo-e-
 Já existe:
 
 - Projeto Django com settings por ambiente (`config/settings/`)
-- App `setup` + `GET /api/v1/health/`
+- Health check `GET /api/v1/health/`
+- Apps `users` / `organizations` / `core` (User, Organization, Membership, AuditLog)
+- API `GET /api/v1/me/` e `GET /api/v1/me/organizations/` (SessionAuthentication)
+- Django Admin para user/org/vínculo com auditoria administrativa
 - Docker Compose (Django + PostgreSQL + Redis), Dockerfile e CI GitHub Actions
 - PostgreSQL/Redis via env; SQLite só com `DJANGO_DB_ENGINE=sqlite`
 - CORS (`django-cors-headers`) e cache Redis/LocMem
 - Rules/skills Cursor e `.env.example`
 
-Ainda não (Fases 2–6): apps `users`/`organizations`, SimpleJWT, claims JWT, RBAC, catálogo de módulos.
+Ainda não (Fases 3–6): SimpleJWT, claims JWT, org ativa no token, RBAC, catálogo de módulos.
 
 ## Estrutura
 
 ```text
 config/          # Projeto Django (settings por ambiente, urls, wsgi/asgi)
-setup/           # App de fundação
-api/v1/          # Endpoints versionados (FBV + path)
-core/            # Abstrações compartilhadas
+users/           # User customizado (email) + seed_demo
+organizations/   # Organization + OrganizationMembership
+core/            # AuditLog, responses, exception handler, auth session 401
+api/v1/          # Endpoints versionados (FBV + path): health, me
 docker/          # entrypoint do container web
 docs/adr/        # Architecture Decision Records
+docs/identity/   # Modelo de identidade (Fase 2)
 docs/initial_plan/
 .github/workflows/
 manage.py
@@ -91,6 +96,16 @@ python manage.py runserver
 ```
 
 Health check: `GET http://127.0.0.1:8000/api/v1/health/`
+
+Após migrate, opcional:
+
+```bash
+python manage.py seed_demo
+```
+
+Perfil (requer sessão autenticada): `GET /api/v1/me/` · organizações: `GET /api/v1/me/organizations/`
+
+Modelo de identidade: [docs/identity/modelo-identidade.md](docs/identity/modelo-identidade.md).
 
 ## Docker Compose (recomendado)
 
@@ -133,6 +148,8 @@ pytest -m "not integration" -v
 
 | Data | Tipo | Módulo/Pasta | Alteração | Impacto |
 | ---- | ---- | ------------ | --------- | ------- |
+| 2026-08-03 | Adicionado | `users/`, `organizations/`, `core/`, `api/v1/me/` | Fase 2: User (email), Organization, Membership, AuditLog, Admin com auditoria, `GET /me/` e `GET /me/organizations/`, `seed_demo`. | Fonte de verdade de identidade; JWT/RBAC nas fases seguintes. |
+| 2026-08-03 | Removido | `setup/`, `api/v1/setup/` | App `setup` removido (não previsto no plano); health check movido para `api/v1/health/` sem app Django dedicado. | Menos app vazio; `GET /api/v1/health/` mantido. |
 | 2026-08-03 | Adicionado | `Dockerfile`, `docker-compose.yml`, `.github/workflows/ci.yml`, `config/settings/` | Fase 1: Compose (Django+Postgres+Redis), deps (`psycopg`, cors, redis), settings de banco/cache/CORS via env, CI (ruff+pytest) e `config.settings.test`. | Ambiente reproduzível; PR falha se lint/testes quebrarem. |
 | 2026-08-03 | Documentado | `docs/adr/`, `docs/initial_plan/`, `README.md` | Fase 0: ADRs (IdP, tenant, JWT claims, sync), escopo/não-escopo, reconciliação do roadmap antigo e backlog macro (épicos 0–6). | Limites e decisões travadas versionados; próximo passo é Fase 1 (Docker/CI/Postgres). |
 | 2026-08-03 | Adicionado | `config/`, `setup/`, `api/v1/`, `core/` | Projeto Django iniciado com settings por ambiente, app `setup` e health check em `/api/v1/health/`. | Base local executável para as próximas fases (usuários, org, JWT). |
