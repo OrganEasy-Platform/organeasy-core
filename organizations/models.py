@@ -67,7 +67,7 @@ class OrganizationMembership(models.Model):
     is_default = models.BooleanField(
         "organização padrão",
         default=False,
-        help_text="Preparação para contexto de tenant (Fase 4).",
+        help_text="Preferência de organização ativa no login (Fase 4).",
     )
     joined_at = models.DateTimeField("entrou em", default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
