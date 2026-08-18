@@ -45,6 +45,7 @@ class MeApiTests(APITestCase):
         self.assertEqual(body["data"]["email"], "me@example.com")
         self.assertEqual(body["data"]["full_name"], "Me User")
         self.assertEqual(body["data"]["status"], "active")
+        self.assertIsNone(body["data"]["active_organization"])
         self.assertNotIn("password", body["data"])
 
     def test_my_organizations_only_active_memberships(self) -> None:

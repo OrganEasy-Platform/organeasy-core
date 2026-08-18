@@ -91,6 +91,15 @@ class AuthJwtApiTests(APITestCase):
         self.assertIn("exp", access)
         self.assertIn("iat", access)
 
+    def test_me_active_organization_null_without_org_claim(self) -> None:
+        payload = build_token_pair_payload(self.user)
+        me = self.client.get(
+            self.me_url,
+            HTTP_AUTHORIZATION=f"Bearer {payload['access']}",
+        )
+        self.assertEqual(me.status_code, status.HTTP_200_OK)
+        self.assertIsNone(me.json()["data"]["active_organization"])
+
     def test_expired_access_rejected_on_me(self) -> None:
         token = OrganEasyAccessToken.for_user(self.user)
         token.set_exp(from_time=timezone.now() - timedelta(hours=1), lifetime=timedelta(seconds=1))

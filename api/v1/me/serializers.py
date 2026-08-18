@@ -8,10 +8,18 @@ from organizations.models import Organization
 from users.models import User
 
 
+class ActiveOrganizationSerializer(serializers.Serializer):
+    id = serializers.UUIDField()
+    name = serializers.CharField()
+    slug = serializers.SlugField()
+
+
 class MeSerializer(serializers.ModelSerializer):
+    active_organization = ActiveOrganizationSerializer(allow_null=True, required=False)
+
     class Meta:
         model = User
-        fields = ("id", "email", "full_name", "status")
+        fields = ("id", "email", "full_name", "status", "active_organization")
         read_only_fields = fields
 
 

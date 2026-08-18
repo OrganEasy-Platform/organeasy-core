@@ -80,12 +80,16 @@ Contrato: [docs/identity/jwt-contract.md](../identity/jwt-contract.md).
 | Campo | Valor |
 | ----- | ----- |
 | Fase | 4 |
-| Status | Pendente — especificação antes dos endpoints de contexto |
+| Status | Concluída (Pacote A — spec aprovada + implementação) |
 | Objetivo | Organização ativa e isolamento |
 | Entregáveis | Org ativa no login e/ou troca de contexto; `org_id` no JWT; helpers de tenant em services; testes negativos cross-tenant |
 | Dependências | E3 |
 | Riscos | Aceitar `organization_id` do body como verdade; consultas sem tenant “passando” |
 | Critério de pronto | Sem contexto de tenant, falha segura; suíte de isolamento verde |
+
+**Pacote A (entregue):** resolução de org no login, switch, refresh com revalidação, `/me.active_organization`, AuditLog de switch, helpers (`resolve` / `require` / `assert`).
+
+**Pacote B (próximo, fora deste épico de implementação imediata):** onboarding — criar org (limite 1 criada/usuário), entrar por código **e** pedido+aprovação; pagamento futuro para criar >1 org. Ver `decisions.md`.
 
 ---
 
@@ -115,13 +119,27 @@ Contrato: [docs/identity/jwt-contract.md](../identity/jwt-contract.md).
 | Riscos | Dependências cíclicas entre módulos; desabilitar sem UX clara para o cliente |
 | Critério de pronto | Capacidades só via backend; módulo off bloqueia acesso |
 
+**Produto (confirmado 2026-08-17):** home do frontend lista módulos; itens sem MVP / não habilitados aparecem como `coming_soon` / “em breve”. UI fora deste repo; backend alimenta o catálogo neste épico.
+
 ---
 
 ## Explicitamente fora deste backlog (não criar épicos aqui)
 
 - Kanban, Chat, Financeiro, RH, WMS, TMS, E-commerce
 - Swarm / HAProxy / Grafana-Prometheus-Loki-Tempo completos
-- Frontend de produto (além do Django Admin)
+- Frontend de produto (além do Django Admin) — home “em breve” fica no frontend (E6)
+
+## Épico futuro — Onboarding de organização (Pacote B)
+
+Não faz parte dos E0–E6 originais; depende da Fase 4 (Pacote A).
+
+| Campo | Valor |
+| ----- | ----- |
+| Status | Pendente — especificar depois da E4 |
+| Objetivo | Self-service: criar org e entrar em org existente |
+| Regras confirmadas | Criar com **limite 1 org criada/usuário**; pertencer a N; join por **código** e **pedido+aprovação**; pagamento futuro para criar >1 |
+| Dependências | E4 Pacote A |
+| Critério de pronto | Usuário sem org só acessa onboarding; após criar/entrar obtém `org_id` |
 
 ## Issues no GitHub
 
@@ -131,8 +149,8 @@ Contrato: [docs/identity/jwt-contract.md](../identity/jwt-contract.md).
 | E1 | [#19](https://github.com/OrganEasy-Platform/organeasy-core/issues/19) `chore(ci): Fase 1 — Docker Compose, Postgres e GitHub Actions` | `epic`, `phase-1` | Fechada |
 | E2 | [#20](https://github.com/OrganEasy-Platform/organeasy-core/issues/20) `feat(users): Fase 2 — User, Organization e vínculo` | `epic`, `phase-2` | Fechada |
 | E3 | [#21](https://github.com/OrganEasy-Platform/organeasy-core/issues/21) `feat(auth): Fase 3 — SimpleJWT login/refresh/logout/me` | `epic`, `phase-3` | Fechada (local; fechar Issue no GitHub se ainda aberta) |
-| E4 | [#22](https://github.com/OrganEasy-Platform/organeasy-core/issues/22) `feat(organizations): Fase 4 — contexto de tenant e org_id no JWT` | `epic`, `phase-4`, `needs-spec` | Aberta |
+| E4 | [#22](https://github.com/OrganEasy-Platform/organeasy-core/issues/22) `feat(organizations): Fase 4 — contexto de tenant e org_id no JWT` | `epic`, `phase-4` | Fechada (local; fechar Issue no GitHub se ainda aberta) |
 | E5 | [#23](https://github.com/OrganEasy-Platform/organeasy-core/issues/23) `feat(auth): Fase 5 — RBAC e scopes por organização` | `epic`, `phase-5`, `needs-spec` | Aberta |
-| E6 | [#24](https://github.com/OrganEasy-Platform/organeasy-core/issues/24) `feat(organizations): Fase 6 — catálogo de módulos habilitáveis` | `epic`, `phase-6`, `needs-spec` | Aberta |
+| E6 | [#24](https://github.com/OrganEasy-Platform/organeasy-core/issues/24) `feat(organizations): Fase 6 — catálogo de módulos habilitáveis` | `epic`, `phase-6`, `needs-spec` | Aberta (nota: UI “em breve” no frontend) |
 
 Labels: `phase-0` … `phase-6`, `epic`, `needs-spec` (Fases 3–6).

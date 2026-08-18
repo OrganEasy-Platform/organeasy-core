@@ -15,6 +15,7 @@ class AuditLog(models.Model):
         CREATE = "create", "Criação"
         UPDATE = "update", "Atualização"
         STATUS_CHANGE = "status_change", "Mudança de status"
+        SWITCH_CONTEXT = "switch_context", "Troca de contexto"
 
     class EntityType(models.TextChoices):
         USER = "user", "Usuário"
