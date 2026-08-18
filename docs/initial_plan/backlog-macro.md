@@ -131,15 +131,13 @@ Contrato: [docs/identity/jwt-contract.md](../identity/jwt-contract.md).
 
 ## Épico futuro — Onboarding de organização (Pacote B)
 
-Não faz parte dos E0–E6 originais; depende da Fase 4 (Pacote A).
-
 | Campo | Valor |
 | ----- | ----- |
-| Status | Pendente — especificar depois da E4 |
+| Status | **Concluído** (spec aprovada + implementação) |
 | Objetivo | Self-service: criar org e entrar em org existente |
-| Regras confirmadas | Criar com **limite 1 org criada/usuário**; pertencer a N; join por **código** e **pedido+aprovação**; pagamento futuro para criar >1 |
+| Regras | Criar com **limite `ORG_CREATE_LIMIT`** (default 1); pertencer a N; join por **código** e **pedido+aprovação**; pagamento futuro para criar >1 |
 | Dependências | E4 Pacote A |
-| Critério de pronto | Usuário sem org só acessa onboarding; após criar/entrar obtém `org_id` |
+| Doc | [onboarding.md](../identity/onboarding.md) |
 
 ## Issues no GitHub
 

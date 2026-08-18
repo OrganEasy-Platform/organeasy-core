@@ -6,9 +6,14 @@ from django.contrib import admin
 
 from core.audit import build_model_diff, record_audit
 from core.models import AuditLog
-from organizations.models import Organization, OrganizationMembership
+from organizations.models import (
+    Organization,
+    OrganizationInviteCode,
+    OrganizationJoinRequest,
+    OrganizationMembership,
+)
 
-ORG_AUDIT_FIELDS = ["name", "slug", "status"]
+ORG_AUDIT_FIELDS = ["name", "slug", "status", "created_by"]
 MEMBERSHIP_AUDIT_FIELDS = ["status", "is_default"]
 
 
@@ -28,10 +33,11 @@ class OrganizationMembershipInline(admin.TabularInline):
 
 @admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
-    list_display = ("name", "slug", "status", "created_at")
+    list_display = ("name", "slug", "status", "created_by", "created_at")
     list_filter = ("status",)
     search_fields = ("name", "slug")
     prepopulated_fields = {"slug": ("name",)}
+    autocomplete_fields = ("created_by",)
     readonly_fields = ("id", "created_at", "updated_at")
     inlines = [OrganizationMembershipInline]
 
@@ -119,3 +125,35 @@ class OrganizationMembershipAdmin(admin.ModelAdmin):
             organization=obj.organization,
             changes=changes,
         )
+
+
+@admin.register(OrganizationInviteCode)
+class OrganizationInviteCodeAdmin(admin.ModelAdmin):
+    list_display = (
+        "code",
+        "organization",
+        "is_active",
+        "use_count",
+        "max_uses",
+        "expires_at",
+        "created_at",
+    )
+    list_filter = ("is_active",)
+    search_fields = ("code", "organization__name", "organization__slug")
+    autocomplete_fields = ("organization", "created_by")
+    readonly_fields = ("id", "use_count", "created_at", "updated_at")
+
+
+@admin.register(OrganizationJoinRequest)
+class OrganizationJoinRequestAdmin(admin.ModelAdmin):
+    list_display = (
+        "user",
+        "organization",
+        "status",
+        "reviewed_by",
+        "created_at",
+    )
+    list_filter = ("status",)
+    search_fields = ("user__email", "organization__name", "organization__slug")
+    autocomplete_fields = ("user", "organization", "reviewed_by")
+    readonly_fields = ("id", "created_at", "updated_at", "reviewed_at")

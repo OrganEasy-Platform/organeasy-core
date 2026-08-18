@@ -16,11 +16,17 @@ class AuditLog(models.Model):
         UPDATE = "update", "Atualização"
         STATUS_CHANGE = "status_change", "Mudança de status"
         SWITCH_CONTEXT = "switch_context", "Troca de contexto"
+        REDEEM = "redeem", "Resgate"
+        APPROVE = "approve", "Aprovação"
+        REJECT = "reject", "Rejeição"
+        CANCEL = "cancel", "Cancelamento"
 
     class EntityType(models.TextChoices):
         USER = "user", "Usuário"
         ORGANIZATION = "organization", "Organização"
         MEMBERSHIP = "membership", "Vínculo"
+        INVITE_CODE = "invite_code", "Código de convite"
+        JOIN_REQUEST = "join_request", "Pedido de entrada"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     actor = models.ForeignKey(
