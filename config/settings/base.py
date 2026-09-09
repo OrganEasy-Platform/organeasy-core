@@ -167,6 +167,9 @@ SIMPLE_JWT = {
     "AUTH_TOKEN_CLASSES": ("core.tokens.OrganEasyAccessToken",),
 }
 
+# Pacote B — limite de organizações criadas por usuário (billing futuro altera este valor).
+ORG_CREATE_LIMIT = int(os.getenv("ORG_CREATE_LIMIT", "1"))
+
 # Schema/Swagger: desligado por padrão; development/test ligam. Produção exige env explícito.
 ENABLE_API_DOCS = os.getenv("DJANGO_ENABLE_API_DOCS", "false").strip().lower() in (
     "1",

@@ -58,15 +58,16 @@ Já existe:
 - Health check `GET /api/v1/health/`
 - Apps `users` / `organizations` / `core` (User, Organization, Membership, AuditLog)
 - SimpleJWT: `POST /api/v1/auth/login|refresh|logout|switch-organization/` + Bearer em `/me`
+- Onboarding Pacote B: criar org, join-by-code, join-requests, invite-codes
 - API `GET /api/v1/me/` (com `active_organization`) e `GET /api/v1/me/organizations/` (JWT ou Session)
 - OpenAPI/Swagger (`drf-spectacular`): `GET /api/docs/` e `GET /api/schema/`
-- Django Admin para user/org/vínculo com auditoria administrativa
+- Django Admin para user/org/vínculo/convites/pedidos com auditoria administrativa
 - Docker Compose (Django + PostgreSQL + Redis), Dockerfile e CI GitHub Actions
 - PostgreSQL/Redis via env; SQLite só com `DJANGO_DB_ENGINE=sqlite`
 - CORS (`django-cors-headers`) e cache Redis/LocMem
 - Rules/skills Cursor e `.env.example`
 
-Ainda não (após Fase 4): onboarding criar/entrar org (Pacote B), RBAC (Fase 5), catálogo de módulos (Fase 6).
+Ainda não: RBAC (Fase 5), catálogo de módulos (Fase 6).
 
 ## Estrutura
 
@@ -169,6 +170,7 @@ pytest -m "not integration" -v
 
 | Data | Tipo | Módulo/Pasta | Alteração | Impacto |
 | ---- | ---- | ------------ | --------- | ------- |
+| 2026-08-17 | Adicionado | `api/v1/organizations/`, models invite/join | Pacote B: criar org (`ORG_CREATE_LIMIT`), join por código e pedido+aprovação, tokens no create/redeem. | Self-service de tenant; docs em `docs/identity/onboarding.md`. |
 | 2026-08-17 | Adicionado | `auth`/`organizations`/`me`, `docs/identity` | Fase 4 Pacote A: `org_id` no JWT, login com org opcional, switch-organization, refresh com revalidação, `/me.active_organization`, helpers de tenant, AuditLog `switch_context`. | Consumidores leem tenant do token; onboarding self-service fica no Pacote B. |
 | 2026-08-03 | Adicionado | `api/v1/auth/`, `core/tokens.py`, SimpleJWT | Fase 3: login/refresh/logout JWT, claims ADR 0003 (`org_id` null), blacklist, contrato em `docs/identity/jwt-contract.md`. | IdP emite Bearer; `/me` aceita JWT; refresh rotacionado e revogável. |
 | 2026-08-03 | Adicionado | `drf-spectacular`, `docs/api/openapi.md`, `config/urls.py` | OpenAPI/Swagger: `/api/schema/`, `/api/docs/`; endpoints `health`/`me` com `@extend_schema`; flag `DJANGO_ENABLE_API_DOCS`; rule `065`. | Documentação interativa da API; contratos no schema. |
